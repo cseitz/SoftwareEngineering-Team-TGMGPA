@@ -13,6 +13,15 @@
     .description {
         padding-left: 8px
     }
+
+    .white_text {
+        color: #ffffff;
+    }
+
+    .black_text {
+        color: #000000;
+    }
+
 </style>
 
 <div class="w3-row">
@@ -226,12 +235,26 @@
                     </td>
                   </tr>`;
         } else {
+            /*
+             * The following is used to calculate whether the letters should be in white or black, it follws the W3C guidelines
+             * See: https://www.w3.org/TR/WCAG20/
+             * See also: https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
+             */
+            const colors = [parseInt(x.color.substring(1, 3), 16) / 255, parseInt(x.color.substring(3, 5), 16) / 255, parseInt(x.color.substring(5, 7), 16) / 255];
+            const c = colors.map((col) => {
+                if (col <= 0.03928) {
+                    return col / 12.92;
+                }
+                return Math.pow((col + 0.055) / 1.055, 2.4);
+            });
+            const text_color = (0.2126 * c[0]) + (0.7152 * c[1]) + (0.0722 * c[2]) > 0.179 ? "black_text" : "white_text";
+
             t = `<tr id="task-${x.id}" class="task">
                   <td>
                     <span id="move_task-${x.id}" class="move_task ${x.list} material-icons">${arrow}</span>
                   </td>
                   <td bgcolor=${x.color}>
-                    <span id="description-${x.id}" class="description${completed}">${x.description}</span>
+                    <span id="description-${x.id}" class="description${completed} ${text_color}">${x.description}</span>
                     <span id="editor-${x.id}" hidden>
                       <input id="input-${x.id}" style="height:22px" class="w3-input" type="text" autofocus/>
                     </span>
