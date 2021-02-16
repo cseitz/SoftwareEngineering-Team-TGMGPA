@@ -13,6 +13,9 @@ from bottle import route, get, put, post, delete
 # web page template processor
 from bottle import template
 
+# static file serving
+from bottle import static_file
+
 VERSION = 0.1
 
 # development server
@@ -152,6 +155,13 @@ def delete_task():
     response.headers['Content-Type'] = 'application/json'
     return json.dumps({'success': True})
 
+
+
+# Serve static files
+# THIS ROUTE SHOULD BE THE LAST ONE, AS IT IS A WILDCARD
+@get('/<filepath:path>')
+def server_static(filepath):
+    return static_file(filepath, root='./public')
 
 if PYTHONANYWHERE:
     application = default_app()
