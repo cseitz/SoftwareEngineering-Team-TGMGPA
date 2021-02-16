@@ -26,12 +26,31 @@ if PYTHONANYWHERE:
 else:
     from bottle import run
 
+def read_file(path):
+    output = ''
+    with open(path,'r') as f:
+        output += f.read()
+    return output
+
+
+import sass, re
+def compile_sass(str):
+    return sass.compile(string=str)
+def compile_sass_file(path):
+    return sass.compile(string=read_file(path))
+def compile_sass_tag(str):
+    def replacer(match):
+        return '<style>' + compile_sass(match.group(0)[len(match.group(1)):][:-2]) + '</'
+    return re.sub('([<style lang="scss">]{19})(.|\n)+?(?=style)', replacer, str)
+
+# compile_sass_tag(open('./components/task.html').read())
+
 # Static File Including
 from bottle import BaseTemplate
 def include_file(path):
-    return open(path).read()
+    return compile_sass_tag(read_file(path))
 def include_component(path):
-    return open('./components/' + path).read()
+    return compile_sass_tag(read_file('./components/' + path))
 BaseTemplate.defaults["file"] = include_file
 BaseTemplate.defaults["component"] = include_component
 
