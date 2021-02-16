@@ -6,3 +6,4 @@
 6. Rewrote Tasks to be Object Oriented
 7. Reimplemented Task Rendering (waaaaaaaay more efficient)
 8. Reimplemented Task Strikethrough
+9. Reimplemented Task Day Swapping

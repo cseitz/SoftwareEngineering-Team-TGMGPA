@@ -54,6 +54,13 @@ class Task {
     };
     return Object.entries(classes).filter(o => o[1]).map(o => o[0]).join(' ');
   }
+  swap() {
+    if (this.day == 'today') {
+      this.day = 'tomorrow';
+    } else {
+      this.day = 'today';
+    }
+  }
 
 }
 </script>
