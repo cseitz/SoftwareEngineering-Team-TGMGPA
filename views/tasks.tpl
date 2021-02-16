@@ -205,9 +205,6 @@
     }
 
     function change_color(event) {
-        if ($("#current_input").val() != "") {
-            return
-        }
         console.log("changed color", event.target.id)
         id = event.target.id.replace("task_color-", "");
         api_update_task({'id': id, color: $("#task_color-" + id).val()},
@@ -236,7 +233,7 @@
                   </tr>`;
         } else {
             /*
-             * The following is used to calculate whether the letters should be in white or black, it follws the W3C guidelines
+             * The following is used to calculate whether the letters should be in white or black, it follows the W3C guidelines
              * See: https://www.w3.org/TR/WCAG20/
              * See also: https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
              */
@@ -253,7 +250,7 @@
                   <td>
                     <span id="move_task-${x.id}" class="move_task ${x.list} material-icons">${arrow}</span>
                   </td>
-                  <td bgcolor=${x.color}>
+                  <td style="background-color: ${x.color} !important; border-radius: 10px;">
                     <span id="description-${x.id}" class="description${completed} ${text_color}">${x.description}</span>
                     <span id="editor-${x.id}" hidden>
                       <input id="input-${x.id}" style="height:22px" class="w3-input" type="text" autofocus/>
@@ -266,7 +263,8 @@
                       <span id="undo_edit-${x.id}" hidden class="undo_edit material-icons">cancel</span>
                       <input type="color" id="task_color-${x.id}" class="change_color" name="task_color" value="${x.color}">
                     </td>
-                  </tr>`;
+                  </tr>
+                    <tr style="height: 8px"/>`;
         }
         $("#task-list-" + x.list).append(t);
         $("#current_input").val("")
