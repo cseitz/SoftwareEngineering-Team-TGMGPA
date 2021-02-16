@@ -1,0 +1,21 @@
+#task-list-today tr {
+border-radius: 10px;
+
+}
+#task-list-today td {
+    background-color:transparent !important;
+}
+#task-list-today, #task-list-tomorrow {
+border-radius: 10px;
+overflow: hidden;
+background-color: rgb(27,27,27);
+}
+#task-list-tomorrow tr {
+    border-radius: 10px;
+}
+#task-list-tomorrow td {
+        background-color:transparent !important;
+}
+.black_text {
+    color: white important !important;
+}

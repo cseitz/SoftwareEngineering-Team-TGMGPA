@@ -9,5 +9,6 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="/css/dark-mode.css">
+  <link rel="stylesheet" href="/css/theme.css">
 </head>
 <body>
