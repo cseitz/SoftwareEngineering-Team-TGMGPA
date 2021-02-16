@@ -1,5 +1,5 @@
 <div id="task-template">
-  <div class="task-item" id="task-{{id}}">
+  <div class="task-item {{classes}}" id="task-{{id}}">
     <div>{{ name }}</div>
     <div>{{{ html_description }}}</div>
   </div>
@@ -38,11 +38,21 @@ class Task {
   render() {
     return Mustache.render(document.querySelector('#task-template').innerHTML, {
       ...this.data,
+      classes: this.classes,
       html_description: marked(this.data.description),
     });
   }
   hook($el) {
-    console.log('HOOKING TO', $el);
+    let task = this;
+    $el.on('click', function() {
+      task.completed = !task.completed;
+    })
+  }
+  get classes() {
+    let classes = {
+      'task-completed': this.completed,
+    };
+    return Object.entries(classes).filter(o => o[1]).map(o => o[0]).join(' ');
   }
 
 }
@@ -50,9 +60,12 @@ class Task {
 
 <style lang="scss">
   .task-item {
-    background-color: red;
+    &.task-completed {
+      text-decoration: line-through;
+    }
+    //background-color: red;
     &:hover {
-      background-color: blue;
+      //background-color: blue;
     }
   }
 </style>

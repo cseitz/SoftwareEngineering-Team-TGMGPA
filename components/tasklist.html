@@ -37,14 +37,12 @@ var TaskList = {
         tasks: [],
       }
     })
-    console.log(daysHTML);
     for (let x of state.tasks) {
       let holder = daysHTML.find(o => o.name.toLowerCase() == x.day.toLowerCase());
       if (holder) {
         holder.tasks.push(x.render());
       }
     }
-    console.log(daysHTML);
     element.innerHTML = Mustache.render(template, {
       days: daysHTML,
     })
