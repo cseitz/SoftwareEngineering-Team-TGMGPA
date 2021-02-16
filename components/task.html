@@ -1,20 +1,36 @@
 <div id="task-template">
   <div>{{ name }}</div>
+  <div>{{{ html_description }}}</div>
 </div>
 
 <script>
 class Task {
   constructor(cfg={}) {
-    Object.assign(this, {
+    this.data = Object.assign({
       day: 'today',
       name: 'default name',
+      description: '[bruh](https://example.com)',
       subtasks: [],
-    })
-    Object.assign(this, cfg);
+      color: false,
+    }, cfg);
+    for (let key of Object.keys(this.data)) {
+      Object.defineProperty(this, key, {
+        get() {
+          return this.data[key];
+        },
+        set(value) {
+          this.data[key] = value;
+          TaskList.update(this);
+        }
+      })
+    }
   }
-  get render() {
-    this.debug = this;
-    return Mustache.render(document.querySelector('#task-template').innerHTML, this);
+  render() {
+    return Mustache.render(document.querySelector('#task-template').innerHTML, {
+      ...this.data,
+      html_description: marked(this.data.description),
+    });
   }
+
 }
 </script>

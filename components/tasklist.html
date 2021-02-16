@@ -1,5 +1,15 @@
 <div id="tasklist">
-  <div>bruh</div>
+  <div>
+    bruh
+    {{#days}}
+      <h2>{{name}}</h2>
+      <span class="tasks">
+        {{#tasks}}
+          <span>{{{ . }}}</span>
+        {{/tasks}}
+      </span>
+    {{/days}}
+  </div>
 </div>
 
 <script>
@@ -7,17 +17,41 @@ let days = ['today', 'tomorrow'];
 let element = document.querySelector('#tasklist');
 let template = element.innerHTML + '';
 let state = {
-  tasks: [],
+  tasks: [
+    new Task({
+      name: 'hey 1',
+      day: 'today',
+    }),
+    new Task({
+      name: 'bruh',
+      day: 'tomorrow',
+    })
+  ],
 };
 var TaskList = {
+  state,
   render() {
-    let daysHTML = new Array(days.length).fill('');
-    for (let x of state.tasks) {
-
-    }
-    element.innerHTML = Mustache.render(template, {
-
+    let daysHTML = days.map(name => {
+      return {
+        name,
+        tasks: [],
+      }
     })
+    console.log(daysHTML);
+    for (let x of state.tasks) {
+      let holder = daysHTML.find(o => o.name.toLowerCase() == x.day.toLowerCase());
+      if (holder) {
+        holder.tasks.push(x.render());
+      }
+    }
+    console.log(daysHTML);
+    element.innerHTML = Mustache.render(template, {
+      days: daysHTML,
+    })
+  },
+  update(task) {
+    console.log('PUSHING CHANGE TO SERVER', task.data);
+    this.render();
   }
 }
 
