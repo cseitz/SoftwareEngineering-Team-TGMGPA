@@ -6,6 +6,7 @@
         <span class="task-content" style="cursor: pointer">{{ name }}</span>
       </div>
       <span style="float: right">
+        <input class="task-btn-color" type="color" value="{{color}}">
         <i class="material-icons task-btn-edit">{{ icon.edit }}</i>
         <i class="material-icons task-btn-delete">{{ icon.delete }}</i>
       </span>
@@ -27,6 +28,7 @@ class Task {
       subtasks: [],
       color: false,
       completed: false,
+      color: '#ffffff',
     }, cfg);
     if (this.data.id == false) {
       this.data.id = ++indexes;
@@ -57,9 +59,13 @@ class Task {
     $el.on('click', function({ target }) {
       if (target.classList.contains('task-btn-swap')) {
         task.swap()
-      } else if (target.tagName != 'a') {
+      } else if (target.tagName != 'A' && target.tagName != 'INPUT') {
+        console.log(target)
         task.completed = !task.completed;
       }
+    })
+    $el.find('input[type="color"]').on('change', function({ target }) {
+      task.color = target.value;
     })
   }
   get classes() {
@@ -94,6 +100,10 @@ class Task {
     .material-icons {
       cursor: pointer;
       display: inline-block;
+    }
+    input[type="color"] {
+      border: none;
+      background: none;
     }
     .task-btn-swap {
       padding-right: 20px;

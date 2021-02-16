@@ -82,7 +82,7 @@ import json
 import dataset
 import time
 
-taskbook_db = dataset.connect('sqlite:///taskbook.db')
+taskbook_db = dataset.connect('sqlite:///taskbook2.db')
 
 
 @get('/api/version')
