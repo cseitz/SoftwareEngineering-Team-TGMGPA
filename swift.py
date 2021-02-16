@@ -106,10 +106,10 @@ def create_task():
     try:
         data = request.json
         for key in data.keys():
-            assert key in ["description", "list"], f"Illegal key '{key}'"
-        assert type(data['description']) is str, "Description is not a string."
-        assert len(data['description'].strip()) > 0, "Description is length zero."
-        assert data['list'] in ["today", "tomorrow"], "List must be 'today' or 'tomorrow'"
+            assert key in ["name", "day"], f"Illegal key '{key}'"
+        assert type(data['name']) is str, "name is not a string."
+        assert len(data['name'].strip()) > 0, "name is length zero."
+        assert data['day'] in ["today", "tomorrow"], "day must be 'today' or 'tomorrow'"
     except Exception as e:
         response.status = "400 Bad Request:" + str(e)
         return
@@ -117,8 +117,8 @@ def create_task():
         task_table = taskbook_db.get_table('task')
         task_table.insert({
             "time": time.time(),
-            "description": data['description'].strip(),
-            "list": data['list'],
+            "name": data['name'].strip(),
+            "day": data['day'],
             "completed": False,
             "color": "#ffffff"
         })
@@ -135,22 +135,22 @@ def update_task():
     try:
         data = request.json
         for key in data.keys():
-            assert key in ["id", "description", "completed", "list", "color"], f"Illegal key '{key}'"
+            assert key in ["id", "name", "completed", "day", "color", "description", "subtasks", "time"], f"Illegal key '{key}'"
         assert type(data['id']) is int, f"id '{id}' is not int"
-        if "description" in request:
-            assert type(data['description']) is str, "Description is not a string."
-            assert len(data['description'].strip()) > 0, "Description is length zero."
+        if "name" in request:
+            assert type(data['name']) is str, "name is not a string."
+            assert len(data['name'].strip()) > 0, "name is length zero."
         if "completed" in request:
             assert type(data['completed']) is bool, "Completed is not a bool."
-        if "list" in request:
-            assert data['list'] in ["today", "tomorrow"], "List must be 'today' or 'tomorrow'"
+        if "day" in request:
+            assert data['day'] in ["today", "tomorrow"], "day must be 'today' or 'tomorrow'"
         if "color" in request:
             assert len(data['color']) == 7, "The color must be in the format #XXXXXX"
             assert data['color'][0] == '#', "The color must be in the format #XXXXXX"
     except Exception as e:
         response.status = "400 Bad Request:" + str(e)
         return
-    if 'list' in data:
+    if 'day' in data:
         data['time'] = time.time()
     try:
         task_table = taskbook_db.get_table('task')

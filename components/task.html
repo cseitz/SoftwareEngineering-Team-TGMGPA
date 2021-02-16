@@ -25,7 +25,7 @@ class Task {
       day: 'today',
       name: 'default name',
       description: '',
-      subtasks: [],
+      //subtasks: [],
       color: false,
       completed: false,
       color: '#ffffff',
@@ -51,7 +51,7 @@ class Task {
       ...this.data,
       classes: this.classes,
       icon: this.icons,
-      html_description: marked(this.data.description),
+      html_description: marked(this.data.description || ''),
     });
   }
   hook($el) {

@@ -30,8 +30,12 @@ var TaskList = {
     for (let x of state.tasks) {
       let holder = daysHTML.find(o => o.name.toLowerCase() == x.day.toLowerCase());
       if (holder) {
-        holder.tasks.push(x.render());
+        holder.tasks.push(x);
       }
+    }
+    for (let x of daysHTML) {
+      x.tasks.sort((a, b) => Number(b.id) - Number(a.id))
+      x.tasks = x.tasks.map(o => o.render())
     }
     element.innerHTML = Mustache.render(template, {
       days: daysHTML,
@@ -43,6 +47,13 @@ var TaskList = {
   },
   update(task) {
     console.log('PUSHING CHANGE TO SERVER', task.data);
+    fetch('/api/tasks', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': "application/json; charset=utf-8",
+      },
+      body: JSON.stringify(task.data),
+    })
     this.render();
   },
   load() {
