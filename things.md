@@ -7,3 +7,4 @@
 7. Reimplemented Task Rendering (waaaaaaaay more efficient)
 8. Reimplemented Task Strikethrough
 9. Reimplemented Task Day Swapping
+10. Reimplemented Task Icons

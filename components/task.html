@@ -1,6 +1,15 @@
 <div id="task-template">
   <div class="task-item {{classes}}" id="task-{{id}}">
-    <div>{{ name }}</div>
+    <div>
+      <div style="display: inline-flex">
+        <i class="material-icons task-btn-swap">{{ icon.arrow }}</i>
+        <span class="task-content" style="cursor: pointer">{{ name }}</span>
+      </div>
+      <span style="float: right">
+        <i class="material-icons task-btn-edit">{{ icon.edit }}</i>
+        <i class="material-icons task-btn-delete">{{ icon.delete }}</i>
+      </span>
+    </div>
     <div>{{{ html_description }}}</div>
   </div>
 </div>
@@ -14,7 +23,7 @@ class Task {
       id: false,
       day: 'today',
       name: 'default name',
-      description: '[bruh](https://example.com)',
+      description: '',
       subtasks: [],
       color: false,
       completed: false,
@@ -39,13 +48,18 @@ class Task {
     return Mustache.render(document.querySelector('#task-template').innerHTML, {
       ...this.data,
       classes: this.classes,
+      icon: this.icons,
       html_description: marked(this.data.description),
     });
   }
   hook($el) {
     let task = this;
-    $el.on('click', function() {
-      task.completed = !task.completed;
+    $el.on('click', function({ target }) {
+      if (target.classList.contains('task-btn-swap')) {
+        task.swap()
+      } else if (target.tagName != 'a') {
+        task.completed = !task.completed;
+      }
     })
   }
   get classes() {
@@ -53,6 +67,13 @@ class Task {
       'task-completed': this.completed,
     };
     return Object.entries(classes).filter(o => o[1]).map(o => o[0]).join(' ');
+  }
+  get icons() {
+    return {
+      arrow: 'arrow_' + (this.day == 'today' ? 'forward' : 'back'),
+      edit: 'edit',
+      delete: 'delete',
+    }
   }
   swap() {
     if (this.day == 'today') {
@@ -67,8 +88,15 @@ class Task {
 
 <style lang="scss">
   .task-item {
-    &.task-completed {
+    &.task-completed .task-content {
       text-decoration: line-through;
+    }
+    .material-icons {
+      cursor: pointer;
+      display: inline-block;
+    }
+    .task-btn-swap {
+      padding-right: 20px;
     }
     //background-color: red;
     &:hover {
