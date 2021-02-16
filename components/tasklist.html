@@ -1,6 +1,5 @@
-<div id="tasklist">
+<div id="tasklist" hidden>
   <div>
-    bruh
     {{#days}}
       <h2>{{name}}</h2>
       <span class="tasks">
@@ -17,17 +16,7 @@ let days = ['today', 'tomorrow'];
 let element = document.querySelector('#tasklist');
 let template = element.innerHTML + '';
 let state = {
-  tasks: [
-    new Task({
-      name: 'hey 1',
-      day: 'today',
-      description: '[bruh](https://example.com)',
-    }),
-    new Task({
-      name: 'bruh',
-      day: 'tomorrow',
-    })
-  ],
+  tasks: [],
 };
 var TaskList = {
   state,
@@ -50,12 +39,22 @@ var TaskList = {
     for (let x of state.tasks) {
       x.hook($('#task-' + x.id))
     }
+    element.removeAttribute('hidden');
   },
   update(task) {
     console.log('PUSHING CHANGE TO SERVER', task.data);
     this.render();
+  },
+  load() {
+    let { render } = this;
+    fetch('/api/tasks').then(res => res.json()).then(({ tasks }) => {
+      state.tasks = tasks.map(o => {
+        return new Task(o);
+      })
+      render();
+    })
   }
 }
 
-TaskList.render();
+TaskList.load();
 </script>
