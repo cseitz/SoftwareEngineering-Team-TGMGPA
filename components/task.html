@@ -1,0 +1,20 @@
+<div id="task-template">
+  <div>{{ name }}</div>
+</div>
+
+<script>
+class Task {
+  constructor(cfg={}) {
+    Object.assign(this, {
+      day: 'today',
+      name: 'default name',
+      subtasks: [],
+    })
+    Object.assign(this, cfg);
+  }
+  get render() {
+    this.debug = this;
+    return Mustache.render(document.querySelector('#task-template').innerHTML, this);
+  }
+}
+</script>

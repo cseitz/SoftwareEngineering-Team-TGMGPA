@@ -18,6 +18,10 @@ from bottle import static_file
 
 VERSION = 0.1
 
+
+
+
+
 # development server
 PYTHONANYWHERE = ("PYTHONANYWHERE_SITE" in os.environ)
 
@@ -26,14 +30,6 @@ if PYTHONANYWHERE:
 else:
     from bottle import run
 
-# Static File Including
-from bottle import BaseTemplate
-def include_file(path):
-    return open(path).read()
-def include_component(path):
-    return open('./components/' + path).read()
-BaseTemplate.defaults["file"] = include_file
-BaseTemplate.defaults["component"] = include_component
 
 # ---------------------------
 # web application routes

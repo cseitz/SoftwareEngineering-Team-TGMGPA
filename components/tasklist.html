@@ -1,0 +1,25 @@
+<div id="tasklist">
+  <div>bruh</div>
+</div>
+
+<script>
+let days = ['today', 'tomorrow'];
+let element = document.querySelector('#tasklist');
+let template = element.innerHTML + '';
+let state = {
+  tasks: [],
+};
+var TaskList = {
+  render() {
+    let daysHTML = new Array(days.length).fill('');
+    for (let x of state.tasks) {
+
+    }
+    element.innerHTML = Mustache.render(template, {
+
+    })
+  }
+}
+
+TaskList.render();
+</script>
