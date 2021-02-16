@@ -1,14 +1,17 @@
 <div id="task-template">
-  <div class="task-item">
+  <div class="task-item" id="task-{{id}}">
     <div>{{ name }}</div>
     <div>{{{ html_description }}}</div>
   </div>
 </div>
 
 <script>
+let indexes = 0;
+var Tasks = {};
 class Task {
   constructor(cfg={}) {
     this.data = Object.assign({
+      id: false,
       day: 'today',
       name: 'default name',
       description: '[bruh](https://example.com)',
@@ -16,6 +19,9 @@ class Task {
       color: false,
       completed: false,
     }, cfg);
+    if (this.data.id == false) {
+      this.data.id = ++indexes;
+    }
     for (let key of Object.keys(this.data)) {
       Object.defineProperty(this, key, {
         get() {
@@ -27,12 +33,16 @@ class Task {
         }
       })
     }
+    Tasks[this.data.id] = this;
   }
   render() {
     return Mustache.render(document.querySelector('#task-template').innerHTML, {
       ...this.data,
       html_description: marked(this.data.description),
     });
+  }
+  hook($el) {
+    console.log('HOOKING TO', $el);
   }
 
 }

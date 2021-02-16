@@ -48,6 +48,9 @@ var TaskList = {
     element.innerHTML = Mustache.render(template, {
       days: daysHTML,
     })
+    for (let x of state.tasks) {
+      x.hook($('#task-' + x.id))
+    }
   },
   update(task) {
     console.log('PUSHING CHANGE TO SERVER', task.data);
