@@ -290,6 +290,26 @@
             $(".delete_task").click(delete_task);
             $(".change_color").change(change_color)
             // set all inputs to set flag
+            $('.delete_task').hover(function() {
+            this.innerHTML = "delete_forever"
+            },      function() {
+            this.innerHTML = "delete"
+            })
+            $('.edit_task').hover(function() {
+            this.innerHTML = "drive_file_rename_outline"
+            }, function() {
+            this.innerHTML = "edit"
+            })
+            $('.move_task.today').hover(function() {
+            this.innerHTML = "east"
+            },          function() {
+            this.innerHTML = "arrow_forward"
+            })
+            $('.move_task.tomorrow').hover(function() {
+             this.innerHTML = "west"
+            }, function() {
+            this.innerHTML = "arrow_back"
+            })
             $("input").keypress(input_keypress);
         });
     }
