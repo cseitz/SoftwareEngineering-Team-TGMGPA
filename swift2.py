@@ -18,6 +18,10 @@ from bottle import static_file
 
 VERSION = 0.1
 
+
+
+
+
 # development server
 PYTHONANYWHERE = ("PYTHONANYWHERE_SITE" in os.environ)
 
@@ -26,33 +30,6 @@ if PYTHONANYWHERE:
 else:
     from bottle import run
 
-def read_file(path):
-    output = ''
-    with open(path,'r') as f:
-        output += f.read()
-    return output
-
-
-import sass, re
-def compile_sass(str):
-    return sass.compile(string=str)
-def compile_sass_file(path):
-    return sass.compile(string=read_file(path))
-def compile_sass_tag(str):
-    def replacer(match):
-        return '<style>' + compile_sass(match.group(0)[len(match.group(1)):][:-2]) + '</'
-    return re.sub('([<style lang="scss">]{19})(.|\n)+?(?=style)', replacer, str)
-
-# compile_sass_tag(open('./components/task.html').read())
-
-# Static File Including
-from bottle import BaseTemplate
-def include_file(path):
-    return compile_sass_tag(read_file(path))
-def include_component(path):
-    return compile_sass_tag(read_file('./components/' + path))
-BaseTemplate.defaults["file"] = include_file
-BaseTemplate.defaults["component"] = include_component
 
 # ---------------------------
 # web application routes
@@ -106,10 +83,10 @@ def create_task():
     try:
         data = request.json
         for key in data.keys():
-            assert key in ["name", "day", "description", "color", "completed"], f"Illegal key '{key}'"
-        assert type(data['name']) is str, "name is not a string."
-        assert len(data['name'].strip()) > 0, "name is length zero."
-        assert data['day'] in ["today", "tomorrow"], "day must be 'today' or 'tomorrow'"
+            assert key in ["description", "list"], f"Illegal key '{key}'"
+        assert type(data['description']) is str, "Description is not a string."
+        assert len(data['description'].strip()) > 0, "Description is length zero."
+        assert data['list'] in ["today", "tomorrow"], "List must be 'today' or 'tomorrow'"
     except Exception as e:
         response.status = "400 Bad Request:" + str(e)
         return
@@ -117,9 +94,8 @@ def create_task():
         task_table = taskbook_db.get_table('task')
         task_table.insert({
             "time": time.time(),
-            "name": data['name'].strip(),
             "description": data['description'].strip(),
-            "day": data['day'],
+            "list": data['list'],
             "completed": False,
             "color": "#ffffff"
         })
@@ -136,22 +112,22 @@ def update_task():
     try:
         data = request.json
         for key in data.keys():
-            assert key in ["id", "name", "completed", "day", "color", "description", "subtasks", "time"], f"Illegal key '{key}'"
+            assert key in ["id", "description", "completed", "list", "color"], f"Illegal key '{key}'"
         assert type(data['id']) is int, f"id '{id}' is not int"
-        if "name" in request:
-            assert type(data['name']) is str, "name is not a string."
-            assert len(data['name'].strip()) > 0, "name is length zero."
+        if "description" in request:
+            assert type(data['description']) is str, "Description is not a string."
+            assert len(data['description'].strip()) > 0, "Description is length zero."
         if "completed" in request:
             assert type(data['completed']) is bool, "Completed is not a bool."
-        if "day" in request:
-            assert data['day'] in ["today", "tomorrow"], "day must be 'today' or 'tomorrow'"
+        if "list" in request:
+            assert data['list'] in ["today", "tomorrow"], "List must be 'today' or 'tomorrow'"
         if "color" in request:
             assert len(data['color']) == 7, "The color must be in the format #XXXXXX"
             assert data['color'][0] == '#', "The color must be in the format #XXXXXX"
     except Exception as e:
         response.status = "400 Bad Request:" + str(e)
         return
-    if 'day' in data:
+    if 'list' in data:
         data['time'] = time.time()
     try:
         task_table = taskbook_db.get_table('task')
