@@ -43,12 +43,11 @@ function contrasting_color(el) {
       }
       return Math.pow((col + 0.055) / 1.055, 2.4);
   });
-  const text_color = (0.2126 * c[0]) + (0.7152 * c[1]) + (0.0722 * c[2]) > 0.179 ? 'black' : 'white';
-  return text_color;
+  return (0.2126 * c[0]) + (0.7152 * c[1]) + (0.0722 * c[2]) > 0.179 ? 'black' : 'white';
 }
 
 let indexes = 0;
-var Tasks = {};
+let Tasks = {};
 class Task {
   constructor(cfg={}) {
     this.data = Object.assign({
@@ -57,7 +56,6 @@ class Task {
       name: '',
       description: '',
       //subtasks: [],
-      color: false,
       completed: false,
       color: '#ffffff',
     }, cfg);
@@ -103,7 +101,7 @@ class Task {
       classes: this.classes,
       icon: this.icons,
       html_description: marked(this.data.description || ''),
-      swap_text: this.day == 'today' ? 'Move to Tomorrow' : 'Move to Today',
+      swap_text: this.day === 'today' ? 'Move to Tomorrow' : 'Move to Today',
     });
   }
   hook($el) {
@@ -118,7 +116,7 @@ class Task {
         task.modal.show();
       } else if (classList.contains('task-btn-delete')) {
         TaskList.delete(task);
-      } else if (target.tagName != 'A' && target.tagName != 'INPUT') {
+      } else if (target.tagName !== 'A' && target.tagName !== 'INPUT') {
         console.log(target)
         task.completed = !task.completed;
       }
@@ -157,17 +155,17 @@ class Task {
   }
   get icons() {
     return {
-      swap: 'arrow_' + (this.day == 'today' ? 'forward' : 'back'),
-      swap_hover: (this.day == 'today' ? 'east' : 'west'),
+      swap: 'arrow_' + (this.day === 'today' ? 'forward' : 'back'),
+      swap_hover: (this.day === 'today' ? 'east' : 'west'),
       edit: 'edit',
       edit_hover: 'drive_file_rename_outline',
       delete: 'delete',
       delete_hover: 'delete_forever',
-      color: "format_color_fill",
+      color: 'format_color_fill'
     }
   }
   swap() {
-    if (this.day == 'today') {
+    if (this.day === 'today') {
       this.day = 'tomorrow';
     } else {
       this.day = 'today';
@@ -181,7 +179,7 @@ class Task {
   }
   modal_hidden(evt) {
     if (!this.id) {
-      if (evt && evt.target.tagName == 'BUTTON') {
+      if (evt && evt.target.tagName === 'BUTTON') {
         TaskList.create(this);
       }
     }
