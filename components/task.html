@@ -18,6 +18,14 @@
   </div>
 </div>
 
+<div id="task-edit-modal-template">
+  <span class="task-edit-modal-content">
+    <input class="task-edit-name" value="{{name}}">
+
+    <button class="close-modal">{{ modal_close_text }}</button>
+  </span>
+</div>
+
 <script>
 
 function contrasting_color(el) {
@@ -56,9 +64,9 @@ class Task {
       completed: false,
       color: '#ffffff',
     }, cfg);
-    if (this.data.id == false) {
+    /*if (this.data.id == false) {
       this.data.id = ++indexes;
-    }
+    }*/
     for (let key of Object.keys(this.data)) {
       Object.defineProperty(this, key, {
         get() {
@@ -66,15 +74,35 @@ class Task {
         },
         set(value) {
           this.data[key] = value;
-          TaskList.update(this);
+          if (this.data.id != false) {
+            TaskList.update(this);
+          }
         }
       })
     }
-    Tasks[this.data.id] = this;
+    let task = this;
+    this.modal = new Modal(function(modal) {
+      return task.render_modal(modal);
+    });
+    this.modal.hook_show = function(el) {
+      task.modal_shown(el);
+    };
+    this.modal.hook_hide = function(evt) {
+      task.modal_hidden(evt);
+    };
+    if (!this.id) {
+      this.modal_close_text = "Create";
+      this.modal.show()
+    } else {
+      this.modal_close_text = "Save";
+      Tasks[this.data.id] = this;
+    }
   }
-  render() {
-    return Mustache.render(document.querySelector('#task-template').innerHTML, {
+  render(html) {
+    let { modal_close_text } = this;
+    return Mustache.render(html || document.querySelector('#task-template').innerHTML, {
       ...this.data,
+      modal_close_text,
       classes: this.classes,
       icon: this.icons,
       html_description: marked(this.data.description || ''),
@@ -84,10 +112,13 @@ class Task {
   hook($el) {
     let task = this;
     $el.on('click', function({ target }) {
-      if (target.classList.contains('task-btn-swap')) {
+      let { classList } = target;
+      if (classList.contains('task-btn-swap')) {
         task.swap()
-      } else if (target.classList.contains('task-btn-color-label') || target.classList.contains('task-btn-color')) {
+      } else if (classList.contains('task-btn-color-label') || classList.contains('task-btn-color')) {
         $el[0].querySelector('input[type="color"]').click();
+      } else if (classList.contains('task-btn-edit')) {
+        task.modal.show();
       } else if (target.tagName != 'A' && target.tagName != 'INPUT') {
         console.log(target)
         task.completed = !task.completed;
@@ -140,64 +171,88 @@ class Task {
       this.day = 'today';
     }
   }
+  modal_shown($modal) {
+    let task = this;
+    $modal.find('.task-edit-name').on('change', function({ target }) {
+      task.name = target.value;
+    })
+  }
+  modal_hidden(evt) {
+    console.log(evt);
+    if (!this.id) {
+      if (evt && evt.target.tagName == 'BUTTON') {
+        alert('CREATING');
+        console.log(this.data);
+      }
+    }
+  }
+  render_modal(modal) {
+    return this.render(document.querySelector('#task-edit-modal-template').innerHTML);
+  }
 
 }
 </script>
 
 <style lang="scss">
-  .task-item {
-    margin-bottom: 5px;
-    &.task-completed .task-content {
-      text-decoration: line-through;
-    }
-    .material-icons {
-      cursor: pointer;
-      display: inline-block;
-    }
-    input[type="color"] {
-      border: none;
-      background: none;
-      width: 0px;
-      opacity: 0;
-      height: 0px;
-      padding: 0px;
-      float: left;
-    }
-    .task-btn-color-label {
-      border: none;
-      width: 100px;
-      margin-right: 25px;
-      padding: 0px;
-      border-radius: 0.5em;
-      cursor: pointer;
-      &:hover {
-        .task-btn-color {
-          opacity: 1;
-        }
-      }
-      .task-btn-color {
-        transform: scale(0.75);
-        transition: opacity 0.15s;
-        opacity: 0;
-        color: white;
-        &.light {
-          color: black;
-        }
-      }
-    }
-    .task-btn-swap {
-      padding-right: 20px;
-    }
-    .task-btn-swap, .task-btn-delete, .task-btn-edit {
-      transition: transform 0.15s;
-      transform: scale(0.85);
-      &:hover {
-        transform: scale(1);
-      }
-    }
-    //background-color: red;
+.task-item {
+  margin-bottom: 5px;
+  &.task-completed .task-content {
+    text-decoration: line-through;
+  }
+  .material-icons {
+    cursor: pointer;
+    display: inline-block;
+  }
+  input[type="color"] {
+    border: none;
+    background: none;
+    width: 0px;
+    opacity: 0;
+    height: 0px;
+    padding: 0px;
+    float: left;
+  }
+  .task-btn-color-label {
+    border: none;
+    width: 100px;
+    margin-right: 25px;
+    padding: 0px;
+    border-radius: 0.5em;
+    cursor: pointer;
     &:hover {
-      //background-color: blue;
+      .task-btn-color {
+        opacity: 1;
+      }
+    }
+    .task-btn-color {
+      transform: scale(0.75);
+      transition: opacity 0.15s;
+      opacity: 0;
+      color: white;
+      &.light {
+        color: black;
+      }
     }
   }
+  .task-btn-swap {
+    padding-right: 20px;
+  }
+  .task-btn-swap, .task-btn-delete, .task-btn-edit {
+    transition: transform 0.15s;
+    transform: scale(0.85);
+    &:hover {
+      transform: scale(1);
+    }
+  }
+  //background-color: red;
+  &:hover {
+    //background-color: blue;
+  }
+}
+
+#modal .task-edit-modal-content {
+  input.task-edit-name {
+    width: 100%;
+  }
+}
 </style>

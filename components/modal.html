@@ -1,19 +1,52 @@
-<div id="modal" class="active">
-  <span class="modal-shadow"></span>
-  <div class="modal-window">
-    bruh
+<span hidden>
+  <div id="modal">
+    <span class="modal-shadow"></span>
+    <div class="modal-window">
+    </div>
   </div>
-</div>
+</span>
 
 <script>
+
 $('.modal-shadow').click(function() {
   $('#modal')[0].classList.remove('active');
 })
+
+class Modal {
+  constructor(render) {
+    this.render = render;
+  }
+
+  show() {
+    let modal = this;
+    window.CurrentModal = this;
+    let content = document.querySelector('.modal-window');
+    content.innerHTML = this.render(modal);
+    this.content = content;
+    document.querySelector('#modal').classList.add('active');
+    if ('hook_show' in this) {
+      this.hook_show($(content))
+    }
+    $(content).find('.close-modal').on('click', function(evt) {
+      modal.hide(evt);
+    })
+  }
+
+  hide(evt) {
+    document.querySelector('#modal').classList.remove('active');
+    if ('hook_show' in this) {
+      this.hook_hide(evt)
+    }
+  }
+}
+
+setTimeout(function() {
+  document.querySelector('#modal').parentElement.removeAttribute('hidden');
+}, 200)
 </script>
 
 <style lang="scss">
 #modal {
-  //display: none;
   position: absolute;
   top: 0px;
   left: 0px;
