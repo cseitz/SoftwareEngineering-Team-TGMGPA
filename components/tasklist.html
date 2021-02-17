@@ -56,6 +56,23 @@ var TaskList = {
     })
     this.render();
   },
+  create(task) {
+    let data = {
+      ...task.data,
+    };
+    delete data.id;
+    fetch('/api/tasks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': "application/json; charset=utf-8",
+      },
+      body: JSON.stringify(data),
+    })
+    let max_id = Math.max(0, ...this.state.tasks.map(o => Number(o.data.id)));
+    task.data.id = max_id + 1;
+    this.state.tasks.push(task);
+    this.render();
+  },
   load() {
     let { render } = this;
     fetch('/api/tasks').then(res => res.json()).then(({ tasks }) => {

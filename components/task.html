@@ -178,11 +178,9 @@ class Task {
     })
   }
   modal_hidden(evt) {
-    console.log(evt);
     if (!this.id) {
       if (evt && evt.target.tagName == 'BUTTON') {
-        alert('CREATING');
-        console.log(this.data);
+        TaskList.create(this);
       }
     }
   }
