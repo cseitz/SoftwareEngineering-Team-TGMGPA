@@ -1,7 +1,9 @@
 <div id="tasklist" hidden>
   <div>
     {{#days}}
-      <h2>{{name}}</h2>
+      <h2 class="day-header">{{name}}
+        <button class="material-icons create-btn" data-day="{{name}}" placeholder="Create">add</button>
+      </h2>
       <span class="tasks">
         {{#tasks}}
           <span>{{{ . }}}</span>
@@ -12,7 +14,7 @@
 </div>
 
 <script>
-let days = ['today', 'tomorrow'];
+let days = ['Today', 'Tomorrow'];
 let element = document.querySelector('#tasklist');
 let template = element.innerHTML + '';
 let state = {
@@ -27,6 +29,7 @@ var TaskList = {
         tasks: [],
       }
     })
+    state.tasks = state.tasks.filter(o => o.day);
     for (let x of state.tasks) {
       let holder = daysHTML.find(o => o.name.toLowerCase() == x.day.toLowerCase());
       if (holder) {
@@ -44,6 +47,13 @@ var TaskList = {
       x.hook($('#task-' + x.id))
     }
     element.removeAttribute('hidden');
+    $('.create-btn').on('click', function({ target }) {
+      new Task({ day: target.dataset.day.toLowerCase() });
+    }).hover(function() {
+      this.innerHTML = "add_circle"
+    }, function() {
+      this.innerHTML = "add"
+    })
   },
   update(task) {
     console.log('PUSHING CHANGE TO SERVER', task.data);
@@ -73,6 +83,17 @@ var TaskList = {
     this.state.tasks.push(task);
     this.render();
   },
+  delete(task) {
+    delete this.state.tasks[this.state.tasks.indexOf(task)];
+    fetch('/api/tasks', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': "application/json; charset=utf-8",
+      },
+      body: JSON.stringify({ id: task.data.id, }),
+    })
+    this.render();
+  },
   load() {
     let { render } = this;
     fetch('/api/tasks').then(res => res.json()).then(({ tasks }) => {
@@ -86,3 +107,15 @@ var TaskList = {
 
 TaskList.load();
 </script>
+
+<style lang="scss">
+.day-header {
+  display: inline-flex;
+  .create-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+  }
+}
+</style>

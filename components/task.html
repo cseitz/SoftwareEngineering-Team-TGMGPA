@@ -44,9 +44,6 @@ function contrasting_color(el) {
       return Math.pow((col + 0.055) / 1.055, 2.4);
   });
   const text_color = (0.2126 * c[0]) + (0.7152 * c[1]) + (0.0722 * c[2]) > 0.179 ? 'black' : 'white';
-  console.log(colors);
-  console.log((0.2126 * c[0]) + (0.7152 * c[1]) + (0.0722 * c[2]));
-  console.log(text_color);
   return text_color;
 }
 
@@ -57,7 +54,7 @@ class Task {
     this.data = Object.assign({
       id: false,
       day: 'today',
-      name: 'default name',
+      name: '',
       description: '',
       //subtasks: [],
       color: false,
@@ -119,13 +116,18 @@ class Task {
         $el[0].querySelector('input[type="color"]').click();
       } else if (classList.contains('task-btn-edit')) {
         task.modal.show();
+      } else if (classList.contains('task-btn-delete')) {
+        TaskList.delete(task);
       } else if (target.tagName != 'A' && target.tagName != 'INPUT') {
         console.log(target)
         task.completed = !task.completed;
       }
     })
-    let color_label = $el[0].querySelector('.task-btn-color-label');
-    color_label.firstElementChild.style.color = contrasting_color(color_label);
+    let color_label;
+    if ($el && $el[0]) {
+      color_label = $el[0].querySelector('.task-btn-color-label');
+      color_label.firstElementChild.style.color = contrasting_color(color_label);
+    }
     $el.find('input[type="color"]').on('change', function({ target }) {
       task.color = target.value;
     }).on('input', function({ target }) {

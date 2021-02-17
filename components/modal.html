@@ -30,6 +30,8 @@ class Modal {
     $(content).find('.close-modal').on('click', function(evt) {
       modal.hide(evt);
     })
+    let firstInput = content.querySelector('input, button');
+    if (firstInput) firstInput.focus();
   }
 
   hide(evt) {
