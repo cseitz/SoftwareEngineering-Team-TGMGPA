@@ -1,0 +1,22 @@
+
+.banner {
+  position: relative;
+}
+
+.black_text {
+  color: white !important;
+}
+
+.dark_mode_switch {
+  margin: 0;
+  right: 0;
+  position: absolute;
+  top: 50%;
+  padding: 10px;
+  transition: transform 0.15s;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  &:hover {
+    cursor: pointer;
+  }
+}
