@@ -61,17 +61,19 @@ BaseTemplate.defaults["component"] = include_component
 @route('/')
 @route('/tasks')
 def tasks():
-    return template("tasks.tpl")
+    #print(template("tasks.tpl"))
+    #return template("tasks.tpl")
+    return compile_sass_tag(template('tasks.tpl'))
 
 
 @route('/login')
 def login():
-    return template("login.tpl")
+    return compile_sass_tag(template("login.tpl"))
 
 
 @route('/register')
 def login():
-    return template("register.tpl")
+    return compile_sass_tag(template("register.tpl"))
 
 
 # ---------------------------
@@ -198,6 +200,7 @@ cached_files = {
 def server_static(filepath):
     ext = os.path.splitext(filepath)[1]
     if ext == '.scss':
+        response.content_type = "text/css"
         if useCache:
             if cached_files.get(filepath, False):
                 return cached_files[filepath]

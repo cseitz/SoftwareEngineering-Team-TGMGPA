@@ -1,18 +1,13 @@
 body.dark-mode {
   background-color: rgb(53, 54, 58);
   color: white;
-}
-/*
-body.dark-mode button, body.dark-mode input, body.dark-mode td {
-  background-color: rgba(27, 27, 27, 1);
-  color: white;
-}
+  
+  button, body.dark-mode input, body.dark-mode td {
+    background-color: rgba(27, 27, 27, 1);
+    color: white;
+  }
 
-body.dark-mode span {
-  color: white;
+  span {
+    color: white;
+  }
 }
-
-body.dark-mode .w3-border-white {
-  border-color: transparent!important;
-}
-*/

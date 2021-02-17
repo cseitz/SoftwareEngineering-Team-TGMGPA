@@ -16,7 +16,7 @@
 .dark-mode-switch {
   color: white;
   border: none;
-  background: none;
+  background: none!important;
   float: right;
   margin-right: 20px;
   margin-top: 20px;
