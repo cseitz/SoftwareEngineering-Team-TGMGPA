@@ -187,8 +187,25 @@ def delete_task():
 
 # Serve static files
 # THIS ROUTE SHOULD BE THE LAST ONE, AS IT IS A WILDCARD
+import os
+useCache = False
+cached_files = {
+
+}
+
+
 @get('/<filepath:path>')
 def server_static(filepath):
+    ext = os.path.splitext(filepath)[1]
+    if ext == '.scss':
+        if useCache:
+            if cached_files.get(filepath, False):
+                return cached_files[filepath]
+            else:
+                cached_files[filepath] = compile_sass_file('./public/' + filepath)
+                return cached_files[filepath]
+        else:
+            return compile_sass_file('./public/' + filepath)
     return static_file(filepath, root='./public')
 
 if PYTHONANYWHERE:

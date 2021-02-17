@@ -118,6 +118,11 @@ TaskList.load();
     border: none;
     cursor: pointer;
     outline: none;
+    transition: transform 0.15s;
+    transform: scale(0.85);
+    &:hover {
+      transform: scale(1);
+    }
   }
 }
 #tasklist {
