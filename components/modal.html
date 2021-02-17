@@ -1,0 +1,52 @@
+<div id="modal" class="active">
+  <span class="modal-shadow"></span>
+  <div class="modal-window">
+    bruh
+  </div>
+</div>
+
+<script>
+$('.modal-shadow').click(function() {
+  $('#modal')[0].classList.remove('active');
+})
+</script>
+
+<style lang="scss">
+#modal {
+  //display: none;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100vh;
+  width: 100vw;
+  transition: opacity 0.15s;
+  opacity: 0;
+  pointer-events: none;
+  display: block;
+  z-index: 9999;
+  &.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .modal-shadow {
+    background-color: rgba(0, 0, 0, 0.25);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 100vw;
+    z-index: -1;
+  }
+  .modal-window {
+    width: 500px;
+    max-width: 80vw;
+    margin-top: 20vh;
+    min-height: 30vh;
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 0.5em;
+    padding: 20px;
+  }
+}
+</style>

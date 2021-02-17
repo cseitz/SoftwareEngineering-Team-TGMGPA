@@ -28,6 +28,8 @@
   {{! component('task.html') }}
 </span>
 
+{{! component('modal.html') }}
+
 {{! component('tasklist.html') }}
 
 % include("footer.tpl")
