@@ -13,4 +13,4 @@
   <link rel="stylesheet" href="/css/dark-mode.css">
   <link rel="stylesheet" href="/css/theme.css">
 </head>
-<body>
+<body onload="check_darkmode()">

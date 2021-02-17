@@ -20,6 +20,7 @@ window.darkmode = {
     this.enabled = value;
   }
 }
+
 Object.defineProperty(darkmode, 'enabled', {
   get() {
     return localStorage.getItem('dark-mode') == 'true';
@@ -54,3 +55,14 @@ if (!darkmode.detected) {
 } else {
   updateStyle();
 }
+
+function check_darkmode() {
+      if (darkmode.enabled) {
+        $('#light-mode-icon').show()
+        $('#dark-mode-icon').hide();
+      }
+      else {
+        $('#light-mode-icon').hide()
+        $('#dark-mode-icon').show();
+      }
+    }

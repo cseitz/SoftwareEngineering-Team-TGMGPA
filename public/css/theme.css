@@ -16,20 +16,26 @@ background-color: rgb(27,27,27);
 #task-list-tomorrow td {
         background-color:transparent !important;
 }
+
+.banner {
+    position: relative;
+}
+
 .black_text {
     color: white !important;
 }
 
 .dark_mode_switch {
-    position: fixed;
+    margin: 0;
     right: 0;
-    bottom: 0;
+    position: absolute;
+    top: 50%;
     padding: 10px;
     transition: transform 0.15s;
-    transform: scale(0.85);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
 }
 
  .dark_mode_switch:hover {
-	 transform: scale(1);
 	 cursor: pointer;
 }
