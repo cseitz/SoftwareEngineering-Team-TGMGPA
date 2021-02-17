@@ -1,16 +1,16 @@
 <div id="tasklist" hidden>
-  <div>
     {{#days}}
-      <h2 class="day-header">{{name}}
-        <button class="material-icons create-btn" data-day="{{name}}" placeholder="Create">add</button>
-      </h2>
-      <span class="tasks">
-        {{#tasks}}
-          <span>{{{ . }}}</span>
-        {{/tasks}}
-      </span>
+      <div class="day-list">
+        <h2 class="day-header">{{name}}
+          <button class="material-icons create-btn" data-day="{{name}}" placeholder="Create">add</button>
+        </h2>
+        <span class="tasks">
+          {{#tasks}}
+            <span>{{{ . }}}</span>
+          {{/tasks}}
+        </span>
+      </div>
     {{/days}}
-  </div>
 </div>
 
 <script>
@@ -23,6 +23,7 @@ let state = {
 var TaskList = {
   state,
   render() {
+    element = document.querySelector('#tasklist');
     let daysHTML = days.map(name => {
       return {
         name,
@@ -40,13 +41,14 @@ var TaskList = {
       x.tasks.sort((a, b) => Number(b.id) - Number(a.id))
       x.tasks = x.tasks.map(o => o.render())
     }
+    console.log(daysHTML)
     element.innerHTML = Mustache.render(template, {
       days: daysHTML,
     })
     for (let x of state.tasks) {
       x.hook($('#task-' + x.id))
     }
-    element.removeAttribute('hidden');
+    document.querySelector('#tasklist').removeAttribute('hidden');
     $('.create-btn').on('click', function({ target }) {
       new Task({ day: target.dataset.day.toLowerCase() });
     }).hover(function() {
@@ -116,6 +118,17 @@ TaskList.load();
     border: none;
     cursor: pointer;
     outline: none;
+  }
+}
+#tasklist {
+  .day-list {
+    display: inline-block;
+    width: calc(50vw - 20px);
+    float: left;
+    padding: 10px;
+    @media only screen and (max-width: 600px) {
+      width: calc(100vw - 20px);
+    }
   }
 }
 </style>
