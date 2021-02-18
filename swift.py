@@ -35,9 +35,14 @@ def read_file(path):
 
 import sass, re
 def compile_sass(str):
-    return sass.compile(string=str)
+    if str:
+        if len(str) <= 3:
+            return str
+        else:
+            return sass.compile(string=str)
+    return str
 def compile_sass_file(path):
-    return sass.compile(string=read_file(path))
+    return compile_sass(read_file(path))
 def compile_sass_tag(str):
     def replacer(match):
         return '<style>' + compile_sass(match.group(0)[len(match.group(1)):][:-2]) + '</'
