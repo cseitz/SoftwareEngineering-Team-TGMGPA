@@ -2,14 +2,14 @@
 
 let local = {
   tasks: {
-    async update(task) {
-      console.log('UPDATING LOCAL TASK', task);
-    },
     async create(data) {
       console.log('CREATING LOCAL TASK', data);
     },
-    async delete(data) {
-      console.log('CREATING LOCAL TASK', data);
+    async update(task) {
+      console.log('UPDATING LOCAL TASK', task);
+    },
+    async delete(task) {
+      console.log('DELETING LOCAL TASK', task);
     },
     async get() {
       console.log('FETCHING LOCAL TASKS');
@@ -31,18 +31,6 @@ var API = {
     return new URLSearchParams(location.search).get('offline') !== null;
   },
   tasks: {
-    update(task) {
-      if (API.offline) {
-        return local.tasks.update(task);
-      }
-      return fetch('/api/tasks', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': "application/json; charset=utf-8",
-        },
-        body: JSON.stringify(task.data),
-      })
-    },
     create(data) {
       if (API.offline) {
         return local.tasks.create(data);
@@ -53,6 +41,18 @@ var API = {
           'Content-Type': "application/json; charset=utf-8",
         },
         body: JSON.stringify(data),
+      })
+    },
+    update(task) {
+      if (API.offline) {
+        return local.tasks.update(task);
+      }
+      return fetch('/api/tasks', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': "application/json; charset=utf-8",
+        },
+        body: JSON.stringify(task.data),
       })
     },
     delete(task) {
