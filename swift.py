@@ -50,7 +50,7 @@ from bottle import BaseTemplate
 def include_file(path):
     return compile_sass_tag(read_file(path))
 def include_component(path):
-    return compile_sass_tag(read_file('./components/' + path))
+    return read_file('./components/' + path)
 BaseTemplate.defaults["file"] = include_file
 BaseTemplate.defaults["component"] = include_component
 
@@ -61,17 +61,19 @@ BaseTemplate.defaults["component"] = include_component
 @route('/')
 @route('/tasks')
 def tasks():
-    return template("tasks.tpl")
+    #print(template("tasks.tpl"))
+    #return template("tasks.tpl")
+    return compile_sass_tag(template('tasks.tpl'))
 
 
 @route('/login')
 def login():
-    return template("login.tpl")
+    return compile_sass_tag(template("login.tpl"))
 
 
 @route('/register')
 def login():
-    return template("register.tpl")
+    return compile_sass_tag(template("register.tpl"))
 
 
 # ---------------------------
@@ -187,8 +189,26 @@ def delete_task():
 
 # Serve static files
 # THIS ROUTE SHOULD BE THE LAST ONE, AS IT IS A WILDCARD
+import os
+useCache = False
+cached_files = {
+
+}
+
+
 @get('/<filepath:path>')
 def server_static(filepath):
+    ext = os.path.splitext(filepath)[1]
+    if ext == '.scss':
+        response.content_type = "text/css"
+        if useCache:
+            if cached_files.get(filepath, False):
+                return cached_files[filepath]
+            else:
+                cached_files[filepath] = compile_sass_file('./public/' + filepath)
+                return cached_files[filepath]
+        else:
+            return compile_sass_file('./public/' + filepath)
     return static_file(filepath, root='./public')
 
 if PYTHONANYWHERE:

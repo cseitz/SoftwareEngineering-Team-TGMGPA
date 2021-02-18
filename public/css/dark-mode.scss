@@ -1,0 +1,14 @@
+// dark mode style overrides of theme.scss
+body.dark-mode {
+  background-color: rgb(53, 54, 58);
+  color: white;
+
+  button, input, td {
+    background-color: rgba(27, 27, 27, 1);
+    color: white;
+  }
+
+  span {
+    color: white;
+  }
+}

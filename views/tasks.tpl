@@ -1,7 +1,7 @@
 % include("header.tpl")
 % include("banner.tpl")
 
-<style>
+<style lang="scss">
     .save_edit, .undo_edit, .move_task, .description, .edit_task, .delete_task {
         cursor: pointer;
     }
