@@ -33,6 +33,7 @@ def read_file(path):
     return output
 
 
+
 import sass, re
 def compile_sass(str):
     if str:
@@ -42,11 +43,28 @@ def compile_sass(str):
             return sass.compile(string=str)
     return str
 def compile_sass_file(path):
-    return compile_sass(read_file(path))
+    compiled = ''
+    try:
+        compiled = compile_sass(read_file(path))
+    except sass.CompileError as e:
+        print('FAILED TO COMPILE', path)
+        print(e)
+        compiled = ''
+    return compiled
 def compile_sass_tag(str):
     def replacer(match):
-        return '<style>' + compile_sass(match.group(0)[len(match.group(1)):][:-2]) + '</'
-    return re.sub('([<style lang="scss">]{19})(.|\n)+?(?=style)', replacer, str)
+        if match.group(0)[0:11] == '<style lang':
+            #print(match.string)
+            compiled = ''
+            try:
+                compiled = '<style>' + compile_sass(match.group(0)[len(match.group(1)):][:-2]) + '</'
+            except sass.CompileError as e:
+                print('FAILED TO COMPILE', str)
+                print(e)
+                compiled = match.string
+            return compiled
+        return match.string
+    return re.sub('(<style lang="scss">)(.|\n)+?(?=(style))', replacer, str)
 
 # compile_sass_tag(open('./components/task.html').read())
 
