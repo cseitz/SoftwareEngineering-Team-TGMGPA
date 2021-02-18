@@ -59,13 +59,7 @@ var TaskList = {
   },
   update(task) {
     console.log('PUSHING CHANGE TO SERVER', task.data);
-    fetch('/api/tasks', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': "application/json; charset=utf-8",
-      },
-      body: JSON.stringify(task.data),
-    })
+    API.tasks.update(task);
     this.render();
   },
   create(task) {
@@ -73,13 +67,7 @@ var TaskList = {
       ...task.data,
     };
     delete data.id;
-    fetch('/api/tasks', {
-      method: 'POST',
-      headers: {
-        'Content-Type': "application/json; charset=utf-8",
-      },
-      body: JSON.stringify(data),
-    })
+    API.tasks.create(data);
     let max_id = Math.max(0, ...this.state.tasks.map(o => Number(o.data.id)));
     task.data.id = max_id + 1;
     this.state.tasks.push(task);
@@ -87,18 +75,12 @@ var TaskList = {
   },
   delete(task) {
     delete this.state.tasks[this.state.tasks.indexOf(task)];
-    fetch('/api/tasks', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': "application/json; charset=utf-8",
-      },
-      body: JSON.stringify({ id: task.data.id, }),
-    })
+    API.tasks.delete(task);
     this.render();
   },
   load() {
     let { render } = this;
-    fetch('/api/tasks').then(res => res.json()).then(({ tasks }) => {
+    API.tasks.get().then(({ tasks }) => {
       state.tasks = tasks.map(o => {
         return new Task(o);
       })

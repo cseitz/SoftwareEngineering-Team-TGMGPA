@@ -55,7 +55,11 @@ from bottle import BaseTemplate
 def include_file(path):
     return compile_sass_tag(read_file(path))
 def include_component(path):
-    return read_file('./components/' + path)
+    ext = os.path.splitext(path)[1]
+    contents = read_file('./components/' + path)
+    if ext == '.js':
+        return '<script>' + contents + '</script>'
+    return contents
 BaseTemplate.defaults["file"] = include_file
 BaseTemplate.defaults["component"] = include_component
 
