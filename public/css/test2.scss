@@ -1,0 +1,122 @@
+:root {
+    --theme: #8dcfff;
+    --col : #FFFFFF
+  }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #F5F5F5;
+  }
+  
+  a {
+    color: #222222;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .container {
+    text-align: center;
+    width: 430px;
+    margin: 0 auto;
+    position: relative;
+  }
+  
+  .btn__wrapper, .calendar {
+    display: inline-block;
+  }
+  
+  .btn__wrapper {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    &.next {
+      right: 0;
+    }
+    &.prev {
+      left:0;
+    }
+    &.next, &.prev {
+      cursor: pointer;
+      
+      path {
+        stroke: var(--theme);
+      }
+    }
+  }
+  
+  .calendar {
+    //size of day * number of days in row + margin * 2 (left and right)
+    width: (50px * 7) + 0;
+    background-color: #FFFFFF;
+    position: relative;
+    margin: 3rem auto;
+    
+    &__header {
+      background-color: var(--theme);
+      color: var(--col);
+      text-align: center;
+      padding-top: 15px;
+      padding-bottom: 15px;
+    }
+    &__month__year {
+      display: inline-block;
+      background-color: var(--theme);
+      position: relative;
+      padding: 5px;
+      z-index: 9999;
+    }
+    &__body {
+      position: relative;
+    }
+    &__days {
+      text-align: left;
+    }
+    &__day {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      position: relative;
+      
+      &__number {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+  
+  .draw-circle, .header__season {
+    position: absolute;
+    
+    svg {
+      position: relative;
+    }
+  }
+  .draw-circle {
+    svg {
+      left: 5px;
+      top: 5px;
+    }
+  }
+  
+  //to style use element, do not style it in html!
+  svg use {
+    stroke: #222;
+    stroke-width: 1;
+  }
+  
+  .today-svg {
+    stroke: var(--theme);
+    stroke-width: 2;
+  }
+  
+  #winter, #spring, #summer, #fall {
+    visibility: hidden;
+  }
+  
+  #winter.winter, #spring.spring, #summer.summer, #fall.fall {
+    visibility: visible;
+  }
+  
+  .today-svg.hidden, .selected-days.hidden {
+    display: none;
+  }
