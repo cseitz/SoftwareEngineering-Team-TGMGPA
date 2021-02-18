@@ -14,10 +14,10 @@ let thisDay = new Date(),
   thisMonth = thisDay.getMonth();
 
 
-var obj = {
+/*var obj = {
   length: 0,
   pathLength: orig.getTotalLength()
-};
+}; */
 
 var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
 ];
@@ -32,12 +32,12 @@ function createUseEl(svg, el) {
   var useElement =
     document.createElementNS('http://www.w3.org/2000/svg', 'use');
 
-  document.querySelector(svg).appendChild(useElement);
+ /* document.querySelector(svg).appendChild(useElement);
 
   useElement.setAttributeNS(
     'http://www.w3.org/1999/xlink',
     'href',
-    el);
+    el); */
   return useElement
 }
 
@@ -111,16 +111,16 @@ function addDate() {
                               </div>
                             </a>`;
   }
-  daysHtml.innerHTML = html;
+ // daysHtml.innerHTML = html;
   var element = document.querySelector('.today-svg');
 
   if (thisMonth === today.getMonth() && !element) {
-    var useEl = createUseEl('.draw-circle svg', '#circle-1');
+   /* var useEl = createUseEl('.draw-circle svg', '#circle-1');
     var todayHtml = document.querySelector('.today');
     var posX = todayHtml.offsetLeft;
     var posY = todayHtml.offsetTop;
     useEl.classList.add('today-svg');
-    useEl.style.transform = `translate(${posX}px, ${posY}px)`;
+    useEl.style.transform = `translate(${posX}px, ${posY}px)`; */
   }
   else if (thisMonth === today.getMonth() && element) {
     document.querySelector('.today-svg').classList.remove('hidden');
@@ -340,7 +340,7 @@ let next;
 /* Event listeners */
 days.forEach(day => day.addEventListener('click', drawOnClick));
 
-nextMonth.addEventListener('click', function() {
+/*nextMonth.addEventListener('click', function() {
   //month + 1
   next = true;
   seasons(next);
@@ -356,7 +356,7 @@ prevMonth.addEventListener('click', function() {
   seasons(next);
   addDate();
   addRemoveSelected();
-});
+});*/
 
 
 
