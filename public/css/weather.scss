@@ -1,3 +1,14 @@
-body{
-    
+.weather-container{
+    background-color: blue;
+    margin: 0 auto;
+    text-align: center;
+    display: inline-block;
+}
+.weather {
+    font-size-adjust: inherit;
+    margin: 0;
+    display: inline;
+}
+.temp {
+    font-size: 10px;
 }
