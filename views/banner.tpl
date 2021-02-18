@@ -5,10 +5,7 @@
     <span class="w3-large w3-button w3-margin w3-round-large w3-blue">Log In</span>
     <span class="w3-large w3-button w3-margin w3-round-large w3-blue">Log Out</span>
   </span>
-  <button id="theme-toggle" class="material-icons dark-mode-switch" onclick="darkmode.toggle()"></button>
-  <!--<i id="dark-mode-icon" class="material-icons dark_mode_switch" onclick='toggle_darkmode()' title="Dark Mode">dark_mode</i>
-  <i id="light-mode-icon" class="material-icons dark_mode_switch" onclick='toggle_darkmode()' title="Light Mode">light_mode</i>
--->
+  <button id="theme-toggle" class="material-icons dark-mode-switch" onclick="darkmode.toggle()">dark_mode</button>
 </div>
 
 <style>

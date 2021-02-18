@@ -5,10 +5,10 @@ let updateStyle = function() {
     let list = document.body.classList;
     if (darkmode.enabled) {
       list.add('dark-mode')
-      $('.dark-mode-switch').html('light_mode').attr('title', 'Light Theme')
+      $('#theme-toggle').html('light_mode').attr('title', 'Light Theme');
     } else {
       list.remove('dark-mode');
-      $('.dark-mode-switch').html('dark_mode').attr('title', 'Dark Theme')
+      $('#theme-toggle').html('dark_mode').attr('title', 'Dark Theme');
     }
   }
 }
@@ -56,15 +56,4 @@ if (!darkmode.detected) {
   })
 } else {
   updateStyle();
-}
-
-function check_darkmode() {
-  if (darkmode.enabled) {
-    $('#light-mode-icon').show()
-    $('#dark-mode-icon').hide();
-  }
-  else {
-    $('#light-mode-icon').hide()
-    $('#dark-mode-icon').show();
-  }
 }
