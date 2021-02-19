@@ -10,7 +10,7 @@ if __name__ == "__main__":
     task_table.drop()
     task_table = taskbook_db.create_table('task')
     task_table.insert_many([
-        {"time": 0.0, "name": "Do something useful", "day": "today", "completed": True, "color": "#ffffff"},
+        {"time": 0.0, "name": "Do something useful", "day" "email": "shared@example.com": "today", "completed": True, "color": "#ffffff"},
         {"time": 0.5, "name": "Do something fantastic", "day": "today", "completed": False, "color": "#ffffff"},
         {"time": 0.3, "name": "Do something remarkable", "day": "tomorrow", "completed": False, "color": "#ffffff"},
         {"time": 0.7, "name": "Do something unusual", "day": "tomorrow", "completed": True, "color": "#ffffff"}
