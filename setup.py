@@ -12,6 +12,6 @@ if __name__ == "__main__":
     task_table.insert_many([
         {"time": 0.0, "name": "Do something useful", "day":"today", "email": "shared@example.com", "completed": True, "color": "#ffffff"},
         {"time": 0.5, "name": "Do something fantastic", "day": "today", "email": "shared@example.com", "completed": False, "color": "#ffffff"},
-        {"time": 0.3, "name": "Do something remarkable", "day": "tomorrow", "email": "shared@example", "completed": False, "color": "#ffffff"},
+        {"time": 0.3, "name": "Do something remarkable", "day": "tomorrow", "email": "shared@example.com", "completed": False, "color": "#ffffff"},
         {"time": 0.7, "name": "Do something unusual", "day": "tomorrow", "email": "shared@example.com", "completed": True, "color": "#ffffff"}
     ])
