@@ -21,7 +21,7 @@
 <div id="task-edit-modal-template">
   <span class="task-edit-modal-content">
     <input class="task-edit-name" value="{{name}}">
-
+    <input class="task-edit-description" value="{{description}}">
     <button class="close-modal">{{ modal_close_text }}</button>
   </span>
 </div>
@@ -175,7 +175,13 @@ class Task {
     let task = this;
     $modal.find('.task-edit-name').on('change', function({ target }) {
       task.name = target.value;
-    })
+    }
+    )
+
+    $modal.find('.task-edit-description').on('change', function({ target }) {
+      task.description = target.value;
+    }
+    )
   }
   modal_hidden(evt) {
     if (!this.id) {
