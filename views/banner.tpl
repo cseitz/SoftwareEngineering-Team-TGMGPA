@@ -4,9 +4,9 @@
      <span class="temp"></span>
      <img class="icon">
      <span class="weather"></span>
-     <span class="city"></span>
+     <!--<span class="city"></span>
      <span class= "state"></span>
-     <span class= "country"></span>
+     <span class= "country"></span>-->
     </span>
   </span>
   <span class="w3-right" hidden>

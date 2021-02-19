@@ -29,10 +29,10 @@ $.getJSON("http://api.openweathermap.org/data/2.5/weather?q=cuyahoga falls,oh,us
   let { main: { temp }, name: city, sys: { country } } = weather_data;
   let weather = weather_data.weather[0].main;
 
-  $(".state").append(state);
+  //$(".state").append(state);
   $(".icon").attr("src", icon);
   $(".temp").append(Math.floor(temp));
   $(".weather").append(weather);
-  $(".city").append(city);
-  $(".country").append(country);
+  //$(".city").append(city);
+  //$(".country").append(country);
 })();
