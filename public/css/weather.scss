@@ -1,18 +1,25 @@
 .weather-container{
-    background-color: blue;
-    margin: 0 auto;
+    background-color: none;
+    margin: 0;
+    right: 200px;
     text-align: center;
-    display: inline-block;
+    position: absolute;
+    font: inherit;
+    line-height: 65px;
+    word-spacing: -10px;
 }
 .weather {
-    font-size-adjust: inherit;
-    margin: 0;
-    display: inline;
+    font-size: 30px;
 }
 .temp {
-    font-size: 10px;
-<<<<<<< HEAD
+    font-size: 30px;
 }
-=======
+.city{
+    font-size: 20px;
 }
->>>>>>> 7fa45b0ac11728564c84ad92d02c858df4c97ca9
+.state{
+    font-size: 15px;
+}
+.country{
+    font-size: 15px;
+}
