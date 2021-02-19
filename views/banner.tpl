@@ -1,5 +1,14 @@
 <div class="w3-container w3-black banner" style="margin: 10px; border-radius: 0.5em;">
-  <span class="w3-xxxlarge w3-margin"><b>Taskbook</b></span>
+  <span class="w3-xxxlarge w3-margin"><b>Taskbook</b>
+    <span class="weather-container">
+     <span class="temp"></span>
+     <img class="icon">
+     <span class="weather"></span>
+     <span class="city"></span>
+     <span class= "state"></span>
+     <span class= "country"></span>
+    </span>
+  </span>
   <span class="w3-right" hidden>
     <span class="w3-large w3-button w3-margin w3-round-large w3-blue">zzzSign up</span>
     <span class="w3-large w3-button w3-margin w3-round-large w3-blue">Log In</span>
