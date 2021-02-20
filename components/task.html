@@ -226,7 +226,9 @@
       }) {
         task.date = target.value;
       }).each(function() {
-        this.value = moment(new Date(task.date)).format('yyyy-MM-DDTHH:mm')
+        if (task.date) {
+          this.value = moment(new Date(task.date)).format('yyyy-MM-DDTHH:mm')
+        }
       })
     }
     modal_hidden(evt) {
