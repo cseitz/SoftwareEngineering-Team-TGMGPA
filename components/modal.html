@@ -21,6 +21,7 @@ class Modal {
     let modal = this;
     window.CurrentModal = this;
     let content = document.querySelector('.modal-window');
+    content.style.backgroundColor = window.darkmode.enabled ? '#1b1c1f' : '#ffffff'
     content.innerHTML = this.render(modal);
     this.content = content;
     document.querySelector('#modal').classList.add('active');

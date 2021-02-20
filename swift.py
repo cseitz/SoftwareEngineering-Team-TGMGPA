@@ -135,10 +135,13 @@ def create_task():
     try:
         data = request.json
         for key in data.keys():
-            assert key in ["name", "day", "description", "color", "completed"], f"Illegal key '{key}'"
+            assert key in ["name", "day", "description", "color", "completed", "date"], f"Illegal key '{key}'"
         assert type(data['name']) is str, "name is not a string."
         assert len(data['name'].strip()) > 0, "name is length zero."
         assert data['day'] in ["today", "tomorrow"], "day must be 'today' or 'tomorrow'"
+        assert len(data['color']) == 7, "The color must be in the format #XXXXXX"
+        assert data['color'][0] == '#', "The color must be in the format #XXXXXX"
+        assert len(data['date']) == 16, "The date must be in the format yyyy-MM-ddThh:mm"
     except Exception as e:
         response.status = "400 Bad Request:" + str(e)
         return
@@ -150,7 +153,8 @@ def create_task():
             "description": data['description'].strip(),
             "day": data['day'],
             "completed": False,
-            "color": "#ffffff"
+            "color": "#ffffff",
+            "date": data['date']
         })
     except Exception as e:
         response.status = "409 Bad Request:" + str(e)
@@ -165,7 +169,7 @@ def update_task():
     try:
         data = request.json
         for key in data.keys():
-            assert key in ["id", "name", "completed", "day", "color", "description", "subtasks", "time"], f"Illegal key '{key}'"
+            assert key in ["id", "name", "completed", "day", "color", "description", "subtasks", "time", "date"], f"Illegal key '{key}'"
         assert type(data['id']) is int, f"id '{id}' is not int"
         if "name" in request:
             assert type(data['name']) is str, "name is not a string."
@@ -177,6 +181,8 @@ def update_task():
         if "color" in request:
             assert len(data['color']) == 7, "The color must be in the format #XXXXXX"
             assert data['color'][0] == '#', "The color must be in the format #XXXXXX"
+        if "date" in request:
+            assert len(data['date']) == 16, "The date must be in the format yyyy-MM-ddThh:mm"
     except Exception as e:
         response.status = "400 Bad Request:" + str(e)
         return
