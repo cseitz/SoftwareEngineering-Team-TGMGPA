@@ -56,7 +56,10 @@
   let indexes = 0;
   let Tasks = {};
   let setters = {
-    date: o => new Date(o).toISOString(),
+    date: o => o.length >= 3 ? new Date(o).toISOString() : '',
+  }
+  let getters = {
+    date: o => o.length >= 3 ? o : false,
   }
   class Task {
     constructor(cfg = {}) {
@@ -76,6 +79,9 @@
       for (let key of Object.keys(this.data)) {
         Object.defineProperty(this, key, {
           get() {
+            if (key in getters) {
+              return getters[key](this.data[key])
+            }
             return this.data[key];
           },
           set(value) {
