@@ -238,8 +238,13 @@ def server_static(filepath):
             return compile_sass_file('./public/' + filepath)
     return static_file(filepath, root='./public')
 
+import platform
+
 if PYTHONANYWHERE:
     application = default_app()
-else:
+elif platform.node() == 'ubuntu-s-1vcpu-1gb-nyc3-01':
     if __name__ == "__main__":
-        run(host='localhost', port=8080, debug=True)
+        run(host='localhost', port=6590, debug=True)
+else:
+   if __name__ == "__main__":
+       run(host='localhost', port=8080, debug=True)
