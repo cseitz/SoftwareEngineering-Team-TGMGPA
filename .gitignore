@@ -135,4 +135,6 @@ dmypy.json
 
 #visual Studio checker
 .vs
+
 things.md
+package.json
