@@ -55,12 +55,15 @@
 
   let indexes = 0;
   let Tasks = {};
+
   let setters = {
-    date: o => o.length >= 3 ? new Date(o).toISOString() : '',
+    date: o => moment(o).format(),
   }
+
   let getters = {
     date: o => o.length >= 3 ? o : false,
   }
+
   class Task {
     constructor(cfg = {}) {
       this.data = Object.assign({
@@ -90,7 +93,7 @@
             } else {
               this.data[key] = value;
             }
-            if (this.data.id != false) {
+            if (this.data.id !== false) {
               TaskList.update(this);
             }
           }
@@ -200,11 +203,11 @@
       if (this.day === 'today') {
         this.day = 'tomorrow';
         console.log(this.date);
-        this.date = moment(this.date, moment.HTML5_FMT.DATETIME_LOCAL).add(1, 'd');
+        this.date = moment(this.date,).add(1, 'd');
 
       } else {
         this.day = 'today';
-        this.date = moment(this.date, moment.HTML5_FMT.DATETIME_LOCAL).subtract(1, 'd');
+        this.date = moment(this.date).subtract(1, 'd');
       }
     }
     modal_shown($modal) {
@@ -227,7 +230,7 @@
         task.date = target.value;
       }).each(function() {
         if (task.date) {
-          this.value = moment(new Date(task.date)).format('yyyy-MM-DDTHH:mm')
+          this.value = moment(task.date).format("YYYY-MM-DDTHH:mm");
         }
       })
     }
