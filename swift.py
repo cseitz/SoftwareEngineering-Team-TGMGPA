@@ -182,7 +182,7 @@ def update_task():
             assert len(data['color']) == 7, "The color must be in the format #XXXXXX"
             assert data['color'][0] == '#', "The color must be in the format #XXXXXX"
         if "date" in request:
-            assert len(data['date']) == 16, "The date must be in the format yyyy-MM-ddThh:mm"
+            assert len(data['date']) == 25, "The date must be in the format yyyy-MM-ddThh:mm"
     except Exception as e:
         response.status = "400 Bad Request:" + str(e)
         return
