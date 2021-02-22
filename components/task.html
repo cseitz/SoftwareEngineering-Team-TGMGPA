@@ -74,7 +74,7 @@
         //subtasks: [],
         completed: false,
         color: '#ffffff',
-        date: '' // Should be in the 'yyyy-MM-ddThh:mm' format
+        date: '' // Should be in the 'YYYY-MM-DDTHH:mm:ssZ' format (moment provides this format by default)
       }, cfg);
       /*if (this.data.id == false) {
         this.data.id = ++indexes;
@@ -230,7 +230,7 @@
         task.date = target.value;
       }).each(function() {
         if (task.date) {
-          this.value = moment(task.date).format("YYYY-MM-DDTHH:mm");
+          this.value = moment(task.date).format("YYYY-MM-DDTHH:mm"); // This allows the html field to render the correct date
         }
       })
     }
