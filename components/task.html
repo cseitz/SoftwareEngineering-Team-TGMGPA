@@ -201,13 +201,12 @@
     }
     swap() {
       if (this.day === 'today') {
-        this.day = 'tomorrow';
-        console.log(this.date);
         this.date = moment(this.date,).add(1, 'd');
+        this.day = 'tomorrow';
 
       } else {
-        this.day = 'today';
         this.date = moment(this.date).subtract(1, 'd');
+        this.day = 'today';
       }
     }
     modal_shown($modal) {
