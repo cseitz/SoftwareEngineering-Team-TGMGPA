@@ -114,6 +114,9 @@ import time
 taskbook_db = dataset.connect('sqlite:///taskbook.db')
 
 
+# variables for the counter
+
+
 @get('/api/version')
 def get_version():
     return {"version": VERSION}
@@ -156,6 +159,10 @@ def create_task():
             "color": "#ffffff",
             "date": data['date']
         })
+
+        
+        
+
     except Exception as e:
         response.status = "409 Bad Request:" + str(e)
     # return 200 Success
@@ -169,7 +176,8 @@ def update_task():
     try:
         data = request.json
         for key in data.keys():
-            assert key in ["id", "name", "completed", "day", "color", "description", "subtasks", "time", "date"], f"Illegal key '{key}'"
+            assert key in ["id", "name", "completed", "day", "color", "description", "subtasks", "time"], f"Illegal key '{key}'"
+            
         assert type(data['id']) is int, f"id '{id}' is not int"
         if "name" in request:
             assert type(data['name']) is str, "name is not a string."
@@ -198,7 +206,6 @@ def update_task():
     response.headers['Content-Type'] = 'application/json'
     return json.dumps({'status': 200, 'success': True})
 
-
 @delete('/api/tasks')
 def delete_task():
     """delete an existing task in the database"""
@@ -217,6 +224,8 @@ def delete_task():
     # return 200 Success
     response.headers['Content-Type'] = 'application/json'
     return json.dumps({'success': True})
+
+    print("delete")
 
 
 

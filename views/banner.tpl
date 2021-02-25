@@ -15,6 +15,9 @@
     <span class="w3-large w3-button w3-margin w3-round-large w3-blue">Log Out</span>
   </span>
   <button id="theme-toggle" class="material-icons dark-mode-switch" onclick="darkmode.toggle()">dark_mode</button>
+
+  <p>{completed:/total:}</p>   
+
 </div>
 
 <style>
