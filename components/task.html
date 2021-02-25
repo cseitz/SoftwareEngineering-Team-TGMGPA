@@ -12,6 +12,7 @@
         </button>
         <i class="material-icons task-btn-edit" title="Edit">{{ icon.edit }}</i>
         <i class="material-icons task-btn-delete" title="Delete">{{ icon.delete }}</i>
+        <i class="material-icons task-btn-done" title="Done">{{ icon.done }}</i>
       </span>
     </div>
     <div>{{{ html_description }}}</div>
@@ -147,7 +148,7 @@
           task.modal.show();
         } else if (classList.contains('task-btn-delete')) {
           TaskList.delete(task);
-        } else if (target.tagName !== 'A' && target.tagName !== 'INPUT') {
+        } else if ((classList.contains('task-btn-done')) || (target.tagName !== 'A' && target.tagName !== 'INPUT')) {
           console.log(target)
           task.completed = !task.completed;
         }
@@ -196,7 +197,8 @@
         edit_hover: 'drive_file_rename_outline',
         delete: 'delete',
         delete_hover: 'delete_forever',
-        color: 'format_color_fill'
+        color: 'format_color_fill',
+        done: 'done'
       }
     }
     swap() {
@@ -302,6 +304,7 @@
 
     .task-btn-swap,
     .task-btn-delete,
+    .task-btn-done,
     .task-btn-edit {
       transition: transform 0.15s;
       transform: scale(0.85);
