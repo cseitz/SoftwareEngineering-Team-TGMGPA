@@ -85,6 +85,7 @@ var API = {
       })
     },
     delete(task) {
+      Archives.create(task);
       if (API.offline) {
         return local.tasks.delete(task);
       }
@@ -105,5 +106,9 @@ var API = {
   },
   get task() { // alias
     return this.tasks;
+  },
+  archives: Archives,
+  get archive() {
+    return Archives;
   }
 }
