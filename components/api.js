@@ -105,5 +105,9 @@ var API = {
   },
   get task() { // alias
     return this.tasks;
+  },
+  archives: Archives,
+  get archive() {
+    return Archives;
   }
 }

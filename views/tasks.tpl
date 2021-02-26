@@ -24,6 +24,7 @@
 
 </style>
 
+{{! component('archives.js') }}
 {{! component('api.js') }}
 <span id="templates" hidden>
   {{! component('task.html') }}
