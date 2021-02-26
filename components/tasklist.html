@@ -158,6 +158,9 @@ var TaskList = {
       })
       render();
     })
+  },
+  completed(days = 7) {
+    return this.state.tasks.filter(o => o.completed).length + Archives.completed(days);
   }
 }
 
