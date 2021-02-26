@@ -153,7 +153,7 @@ def create_task():
             "description": data['description'].strip(),
             "day": data['day'],
             "completed": False,
-            "color": "#ffffff",
+            "color": data['color'], #"#ffffff",
             "date": data['date']
         })
     except Exception as e:

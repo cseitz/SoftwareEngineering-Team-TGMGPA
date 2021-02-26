@@ -147,6 +147,9 @@ var TaskList = {
     API.tasks.delete(task);
     this.render();
   },
+  undoDelete() {
+    API.archive.undoDelete();
+  },
   load() {
     let { render } = this;
     API.tasks.get().then(({ tasks }) => {

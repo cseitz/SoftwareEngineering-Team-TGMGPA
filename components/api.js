@@ -85,6 +85,7 @@ var API = {
       })
     },
     delete(task) {
+      Archives.create(task);
       if (API.offline) {
         return local.tasks.delete(task);
       }
