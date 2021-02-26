@@ -12,7 +12,7 @@
         </button>
         <i class="material-icons task-btn-edit" title="Edit">{{ icon.edit }}</i>
         <i class="material-icons task-btn-delete" title="Delete">{{ icon.delete }}</i>
-        <i class="material-icons task-btn-done" title="Done">{{ icon.done }}</i>
+        <i class="material-icons task-btn-done" title="{{ done_title }}">{{ icon.done }}</i>
       </span>
     </div>
     <div>{{{ html_description }}}</div>
@@ -129,6 +129,7 @@
         icon: this.icons,
         html_description: marked(this.data.description || ''),
         swap_text: this.day === 'today' ? 'Move to Tomorrow' : 'Move to Today',
+        done_title: this.completed ? 'Not Done' : 'Done',
         //date_: this.date_,
       });
     }
@@ -198,7 +199,7 @@
         delete: 'delete',
         delete_hover: 'delete_forever',
         color: 'format_color_fill',
-        done: 'done'
+        done: this.completed ? 'clear' : 'done',
       }
     }
     swap() {
@@ -311,6 +312,9 @@
 
       &:hover {
         transform: scale(1);
+      }
+      &.task-btn-done {
+        width: 30px;
       }
     }
 
