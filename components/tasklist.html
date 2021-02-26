@@ -1,8 +1,20 @@
 <div id="tasklist" hidden>
     {{#days}}
       <div class="day-list">
-        <h2 class="day-header">{{name}}
+        <!--<h2 class="day-header">{{name}}
           <button class="material-icons create-btn" data-day="{{name}}" placeholder="Create">add</button>
+          <span style="width: 80% !important;"></span>
+          <button class="material-icons done-all-btn" data-day="{{name}}">done_all</button>
+        </h2>-->
+        <h2 class="day-header">
+          <span style="grid-area: left;">
+            {{name}}
+            <button class="material-icons create-btn" data-day="{{name}}" placeholder="Create">add</button>
+          </span>
+          <span style="width: 80% !important;" hidden></span>
+          <span style="grid-area: right; text-align: right;">
+            <button class="material-icons done-all-btn" data-day="{{name}}">done_all</button>
+          </span>
         </h2>
         <span class="tasks">
           {{#tasks}}
@@ -51,6 +63,7 @@ var TaskList = {
         tasks: [],
       }
     })
+
     state.tasks = state.tasks.filter(o => o.day);
     for (let x of state.tasks) {
       let holder = daysHTML.find(o => o.name.toLowerCase() == x.day.toLowerCase());
@@ -58,25 +71,60 @@ var TaskList = {
         holder.tasks.push(x);
       }
     }
+
     for (let x of daysHTML) {
       x.tasks.sort((a, b) => Number(b.id) - Number(a.id))
       x.tasks = x.tasks.map(o => o.render())
     }
+
     console.log(daysHTML)
     element.innerHTML = Mustache.render(template, {
       days: daysHTML,
     })
+
     for (let x of state.tasks) {
       x.hook($('#task-' + x.id))
     }
+
     document.querySelector('#tasklist').removeAttribute('hidden');
+
     $('.create-btn').on('click', function({ target }) {
       new Task({ day: target.dataset.day.toLowerCase() });
     }).hover(function() {
       this.innerHTML = "add_circle"
     }, function() {
       this.innerHTML = "add"
-    })
+    });
+
+    $('.done-all-btn').on('click', function({ target }) {
+      // Get on what day this is being called
+      let targetDay = target.dataset.day.toLowerCase();
+      console.log(targetDay);
+
+      // Get if all tasks are done
+      let allDone = true;
+
+      for (let task of state.tasks) {
+        if (task.day !== targetDay) {
+          continue;
+        }
+
+        if (!task.completed) {
+          allDone = false;
+          task.completed = !task.completed;
+        }
+      }
+
+      if (allDone) {
+        for (let task of state.tasks) {
+          if (task.day !== targetDay) {
+            continue;
+          }
+          task.completed = !task.completed;
+        }
+      }
+    });
+
   },
   update(task) {
     console.log('PUSHING CHANGE TO SERVER', task.data);
@@ -115,7 +163,13 @@ TaskList.load();
 
 <style lang="scss">
 .day-header {
-  display: inline-flex;
+  //display: inline-flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-areas: 'left right';
+  width: 100%;
+
+  .done-all-btn,
   .create-btn {
     background: none;
     border: none;
