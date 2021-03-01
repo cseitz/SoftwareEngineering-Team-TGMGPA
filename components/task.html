@@ -23,15 +23,33 @@
   <!-- TODO left this without any kind of styling. Needs to be made prettier -->
 
   <span class="task-edit-modal-content">
-    <label for="modal-task-edit-name" class="modal-label">Task:</label>
-    <input id="modal-task-edit-name" class="task-edit-name" value="{{name}}">
+    <div>
+      <label for="modal-task-edit-name" class="modal-label">Task:</label>
+      <input id="modal-task-edit-name" class="task-edit-name" value="{{name}}">
+    </div>
 
-    <label for="modal-task-edit-description" class="modal-label">Description:</label>
-    <input id="modal-task-edit-description" class="task-edit-description" value="{{description}}">
+    <div>
+      <label for="modal-task-edit-description" class="modal-label">Description:</label>
+      <input id="modal-task-edit-description" class="task-edit-description" value="{{description}}">
+    </div>
 
-    <label for="modal-task-edit-date" class="modal-label">Due date:</label>
-    <input type="datetime-local" id="modal-task-edit-date" class="task-edit-date">
-    <button class="close-modal">{{ modal_close_text }}</button>
+    <div>
+      <label for="modal-task-edit-date" class="modal-label">Due date:</label>
+      <input type="datetime-local" id="modal-task-edit-date" class="task-edit-date">
+    </div>
+
+    <div>
+      <label for="modal-task-notify" class="modal-label">Notify?</label>
+      <select id="modal-task-notify">
+        <option value="no-notification">Don't notify.</option>
+        <option value="15m-notification">15 minutes before due date.</option>
+        <option value="30m-notification">30 minutes before due date.</option>
+        <option value="1h-notification">1 hour before due date.</option>
+        <option value="2h-notification">2 hours before due date.</option>
+        <option value="24h-notification">24 hours before due date.</option>
+      </select>
+      <button class="close-modal">{{ modal_close_text }}</button>
+    </div>
   </span>
 </div>
 
@@ -75,7 +93,8 @@
         //subtasks: [],
         completed: false,
         color: '#ffffff',
-        date: '' // Should be in the 'YYYY-MM-DDTHH:mm:ssZ' format (moment provides this format by default)
+        date: '', // Should be in the 'YYYY-MM-DDTHH:mm:ssZ' format (moment provides this format by default)
+        notify: 'no-notify'
       }, cfg);
       /*if (this.data.id == false) {
         this.data.id = ++indexes;
@@ -100,6 +119,7 @@
           }
         })
       }
+
       let task = this;
       this.modal = new Modal(function(modal) {
         return task.render_modal(modal);
@@ -118,6 +138,7 @@
         Tasks[this.data.id] = this;
       }
     }
+
     render(html) {
       let {
         modal_close_text
@@ -133,6 +154,7 @@
         //date_: this.date_,
       });
     }
+
     hook($el) {
       let task = this;
       $el.on('click', function({
@@ -154,6 +176,7 @@
           task.completed = !task.completed;
         }
       })
+
       let color_label;
       if ($el && $el[0]) {
         color_label = $el[0].querySelector('.task-btn-color-label');
@@ -169,6 +192,7 @@
         color_label.style.backgroundColor = target.value;
         color_label.firstElementChild.style.color = contrasting_color(color_label);
       })
+
       let icons = task.icons;
       let hoverIcon = function(name) {
         let normal = icons[name];
@@ -184,12 +208,14 @@
       hoverIcon('delete');
       //$el.find('.task-btn-color')
     }
+
     get classes() {
       let classes = {
         'task-completed': this.completed,
       };
       return Object.entries(classes).filter(o => o[1]).map(o => o[0]).join(' ');
     }
+
     get icons() {
       return {
         swap: 'arrow_' + (this.day === 'today' ? 'forward' : 'back'),
@@ -202,6 +228,7 @@
         done: this.completed ? 'remove_done' : 'done',
       }
     }
+
     swap() {
       if (this.day === 'today') {
         this.date = moment(this.date,).add(1, 'd');
@@ -212,19 +239,20 @@
         this.day = 'today';
       }
     }
+
     modal_shown($modal) {
       let task = this;
       $modal.find('.task-edit-name').on('change', function({
         target
       }) {
         task.name = target.value;
-      })
+      });
 
       $modal.find('.task-edit-description').on('change', function({
         target
       }) {
         task.description = target.value;
-      })
+      });
 
       $modal.find('.task-edit-date').on('change', function({
         target
@@ -234,12 +262,23 @@
         if (task.date) {
           this.value = moment(task.date).format("YYYY-MM-DDTHH:mm"); // This allows the html field to render the correct date
         }
-      })
+      });
+
+      // This is for the notification selector behavior
+      $modal.find('#modal-task-notify').on('change', (event) => {
+        task.notify = event.target.value;
+      });
     }
+
     modal_hidden(evt) {
       if (!this.id) {
         if (evt && evt.target.tagName === 'BUTTON') {
           TaskList.create(this);
+
+          // Only create the notification in case there is a time set
+          if (this.notify !== 'no-notification') {
+            createNotification(this);
+          }
         }
       }
     }
