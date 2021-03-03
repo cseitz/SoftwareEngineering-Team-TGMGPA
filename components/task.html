@@ -41,7 +41,7 @@
     <div>
       <label for="modal-task-notify" class="modal-label">Notify?</label>
       <select id="modal-task-notify">
-        <option value="no-notification">Don't notify.</option>
+        <option value="no-notification" selected>Don't notify.</option>
         <option value="15m-notification">15 minutes before due date.</option>
         <option value="30m-notification">30 minutes before due date.</option>
         <option value="1h-notification">1 hour before due date.</option>
@@ -265,21 +265,34 @@
       });
 
       // This is for the notification selector behavior
-      $modal.find('#modal-task-notify').on('change', (event) => {
+      const notifySelector = $modal.find('#modal-task-notify');
+      notifySelector.on('change', (event) => {
         task.notify = event.target.value;
       });
+
+      Array.prototype.forEach.call(notifySelector[0].options, (optionsKey => {
+        // Unselect the option that shouldn't be selected
+        if (optionsKey.selected && (task.notify !== optionsKey.value)) {
+          optionsKey.selected = false;
+        }
+
+        // Select the option that should be selected
+        if (!optionsKey.selected && (task.notify === optionsKey.value)) {
+          optionsKey.selected = true;
+        }
+      }));
     }
 
     modal_hidden(evt) {
       if (!this.id) {
         if (evt && evt.target.tagName === 'BUTTON') {
           TaskList.create(this);
-
-          // Only create the notification in case there is a time set
-          if (this.notify !== 'no-notification') {
-            createNotification(this);
-          }
         }
+      }
+
+      // Only create the notification in case there is a time set
+      if (this.notify !== 'no-notification') {
+        createNotification(this);
       }
     }
     render_modal(modal) {

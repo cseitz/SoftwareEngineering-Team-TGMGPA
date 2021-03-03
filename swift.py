@@ -135,7 +135,7 @@ def create_task():
     try:
         data = request.json
         for key in data.keys():
-            assert key in ["name", "day", "description", "color", "completed", "date"], f"Illegal key '{key}'"
+            assert key in ["name", "day", "description", "color", "completed", "date", "notify"], f"Illegal key '{key}'"
         assert type(data['name']) is str, "name is not a string."
         assert len(data['name'].strip()) > 0, "name is length zero."
         assert data['day'] in ["today", "tomorrow"], "day must be 'today' or 'tomorrow'"
@@ -169,7 +169,7 @@ def update_task():
     try:
         data = request.json
         for key in data.keys():
-            assert key in ["id", "name", "completed", "day", "color", "description", "subtasks", "time", "date"], f"Illegal key '{key}'"
+            assert key in ["id", "name", "completed", "day", "color", "description", "subtasks", "time", "date", "notify"], f"Illegal key '{key}'"
         assert type(data['id']) is int, f"id '{id}' is not int"
         if "name" in request:
             assert type(data['name']) is str, "name is not a string."
