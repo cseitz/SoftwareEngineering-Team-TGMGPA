@@ -128,6 +128,8 @@ def get_tasks():
     response.headers['Cache-Control'] = 'no-cache'
     task_table = taskbook_db.get_table('task')
     tasks = [dict(x) for x in task_table.find(email=email, order_by='time')]
+    for x in tasks:
+        x.pop('email', None)
     return {"tasks": tasks}
 
 
