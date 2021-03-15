@@ -18,6 +18,8 @@ from bottle import static_file
 
 VERSION = 0.1
 
+email = "shared@example.com"
+
 # development server
 PYTHONANYWHERE = ("PYTHONANYWHERE_SITE" in os.environ)
 
@@ -125,7 +127,7 @@ def get_tasks():
     response.headers['Content-Type'] = 'application/json'
     response.headers['Cache-Control'] = 'no-cache'
     task_table = taskbook_db.get_table('task')
-    tasks = [dict(x) for x in task_table.find(order_by='time')]
+    tasks = [dict(x) for x in task_table.find(email=email, order_by='time')]
     return {"tasks": tasks}
 
 
@@ -152,6 +154,7 @@ def create_task():
             "name": data['name'].strip(),
             "description": data['description'].strip(),
             "day": data['day'],
+            "email": email.strip(),
             "completed": False,
             "color": data['color'], #"#ffffff",
             "date": data['date']
@@ -186,6 +189,7 @@ def update_task():
     except Exception as e:
         response.status = "400 Bad Request:" + str(e)
         return
+    data['email'] = email
     if 'day' in data:
         data['time'] = time.time()
     try:
@@ -210,7 +214,7 @@ def delete_task():
         return
     try:
         task_table = taskbook_db.get_table('task')
-        task_table.delete(id=data['id'])
+        task_table.delete(email=email, id=data['id'])
     except Exception as e:
         response.status = "409 Bad Request:" + str(e)
         return
