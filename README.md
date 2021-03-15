@@ -13,3 +13,11 @@ Version 0.1 Date: Jan 19, 2021
 ```
 pip3 install libsass dataset bottle
 ```
+
+```
+python3 setup.py
+```
+
+```
+python3 swift.py
+```
