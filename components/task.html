@@ -15,7 +15,7 @@
         <i class="material-icons task-btn-done" title="{{ done_title }}">{{ icon.done }}</i>
       </span>
     </div>
-    <div>{{{ html_description }}}</div>
+    <div class = "description-padding">{{{ html_description }}}</div>
   </div>
 </div>
 
@@ -71,7 +71,7 @@ class Task {
 			id: false,
 			day: 'today',
 			name: '',
-			description: '          ',
+			description: '',
 			//subtasks: [],
 			completed: false,
 			color: '#ffffff',
@@ -332,6 +332,9 @@ class Task {
         &.task-btn-done {
             width: 30px;
         }
+    }
+    .description-padding {
+        padding-left: 50px;
     }
 
     //background-color: red;
