@@ -23,18 +23,19 @@
   <!-- TODO left this without any kind of styling. Needs to be made prettier -->
 
   <span class="task-edit-modal-content">
-    <label for="modal-task-edit-name" class="modal-label">Task:</label>
-    <input id="modal-task-edit-name" class="task-edit-name" value="{{name}}">
+    <!-- <label for="modal-task-edit-name" class="modal-label">Task:</label>
+    <input id="modal-task-edit-name" class="task-edit-name" value="{{name}}"> -->
+    <textarea style="width:100%; height:50%; color:white; background-color:black;"> Add a task...</textarea><br>
 
-    <label for="modal-task-edit-description" class="modal-label">Description:</label>
-     <br> <input id="modal-task-edit-description" class="task-edit-description" style="width:100%" value="{{description}}"> 
-    <!-- <br><textarea style= "width:100%" style="background-color:black;"> </textarea> -->
+    <!-- <label for="modal-task-edit-description" class="modal-label">Description:</label> -->
+     <!-- <br> <input id="modal-task-edit-description" class="task-edit-description" style="width:100%" value="{{description}}"> -->
+     <br><textarea style="width:100%; height:50%; color:white; background-color:black";"> Add details...</textarea><br>
         
     <br><label for="modal-task-edit-date" class="modal-label">Due date:</label>
-    <input type="date" id="modal-task-edit-date" class="task-edit-date">
+    <input type="date" id="modal-task-edit-date" class="task-edit-date"><br>
     
     <br><label for="modal-task-edit-time" class="modal-label">Due time: </label>
-    <input type="time" id="modal-task-edit-date" class="task-edit-date">
+    <input type="time" id="modal-task-edit-date" class="task-edit-date"><br>
     <br><button class="close-modal">{{ modal_close_text}}</button>
 
   </span>
