@@ -101,7 +101,24 @@ var API = {
       if (API.offline) {
         return local.tasks.get();
       }
+
       return fetch('/api/tasks').then(res => res.json());
+    },
+    count(day) {
+      // This is the method I use to call on the server to serve us with the number of tasks
+      // See the swift.py file for the calls
+
+      if (API.offline) {
+        // TODO add offline support
+      }
+      if (day !== 'today' && day !== 'tomorrow') {
+        return fetch('/api/count')
+          .then(res => res.json())
+
+      } else {
+        return fetch(`/api/count/${day}`)
+          .then(res => res.json())
+      }
     }
   },
   get task() { // alias
