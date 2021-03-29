@@ -13,5 +13,6 @@ assert "No results found." not in driver.page_source
 #import test_example
 #import test_printtaskbook
 #import test_class
-import test_duedates
+#import test_duedates
+import test_deletion
 driver.close()
