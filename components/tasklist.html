@@ -14,7 +14,7 @@
           <span style="width: 80% !important;" hidden></span>
           <span style="grid-area: right; text-align: right;">
             <button class="material-icons done-all-btn" data-day="{{name}}">done_all</button>
-            <button class="task-undo-delete">Undo</button>
+            <button class="material-icons task-undo-delete">restore</button>
           </span>
         </h2>
         <span class="tasks">
@@ -181,10 +181,7 @@ TaskList.load();
   width: 100%;
 
   .done-all-btn,
-  .task-undo-delete {
-    position: absolute;
-    bottom: 20px;
-  }
+  .task-undo-delete,
   .create-btn {
     background: none;
     border: none;
@@ -197,6 +194,7 @@ TaskList.load();
     }
   }
 }
+
 #tasklist {
   .day-list {
     display: inline-block;
