@@ -104,6 +104,9 @@ def login():
 def login():
     return compile_sass_tag(template("register.tpl"))
 
+@route('/about')
+def about():
+    return compile_sass_tag(template("about.tpl"))
 
 # ---------------------------
 # task REST api
