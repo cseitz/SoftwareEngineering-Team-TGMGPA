@@ -225,6 +225,32 @@ def delete_task():
     return json.dumps({'success': True})
 
 
+@get('/api/count')
+def get_task_count():
+    statement = 'SELECT COUNT(day) todo, SUM(completed) completed FROM task'
+    res = list(taskbook_db.query(statement))[0]
+
+    return {
+            'count': {
+                'day': 'alltime',
+                'todo': res['todo'],
+                'completed': res['completed']
+            }
+        }
+
+
+@get('/api/count/<day>')
+def get_task_count(day):
+    statement = 'SELECT day, COUNT(day) todo, SUM(completed) completed FROM task WHERE day = \'{0}\' GROUP BY day'.format(day)
+    res = list(taskbook_db.query(statement))[0]
+
+    return {
+            'count': {
+                'day': res['day'],
+                'todo': res['todo'],
+                'completed': res['completed']
+            }
+        }
 
 # Serve static files
 # THIS ROUTE SHOULD BE THE LAST ONE, AS IT IS A WILDCARD
