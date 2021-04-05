@@ -18,7 +18,7 @@ LOGIN
    </div>
 </div>
 
-<div class='input-group date' id='datetimepicker2'>
+<div class='input-group date' id='datetimepicker2' style="width: 300px; float: right;">
   <input type='text' class="form-control" />
   <span class="input-group-addon">
   <span class="glyphicon glyphicon-calendar"></span>

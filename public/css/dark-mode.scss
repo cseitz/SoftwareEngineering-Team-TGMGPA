@@ -7,6 +7,23 @@ body.dark-mode {
     background-color: rgba(27, 27, 27, 1);
     color: white;
   }
+  .dropdown-menu {
+    background-color: rgba(27, 27, 27, 1);
+    color: white;
+  }
+  .bootstrap-datetimepicker-widget {
+    td span:hover, td.day:hover {
+      background-color: rgba(10, 10, 10, 0.5)!important;
+    }
+
+  }
+
+  .form-control, .input-group-addon {
+    border: 1px solid rgba(18, 18, 18, 1);
+    &.input-group-addon {
+      background-color: rgba(18, 18, 18, 1);
+    }
+  }
 
   span {
     color: white;
