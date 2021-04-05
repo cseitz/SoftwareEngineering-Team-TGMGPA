@@ -8,6 +8,22 @@
     <link rel="stylesheet" href="css/weather.scss">
 </head>
 <body>
+<div id="wrapper">
+  <button onclick = "Myfunction()" id="location-button">Get User Location</button>
+  <div id="output"></div>
+</div>
+<!--
+  <script>
+  $("#location-button").click(function(){
+  if(navigator.geolocation)
+      navigator.geolocation.getCurrentPosition(function(position){
+        console.log(position);
+      });
+  else
+      console.log("geolocation is not supported");
+  });
+</script>
+-->
 <div class="weather-container">
     <p class= "usercity"></p>
     <p class= "country"></p>
