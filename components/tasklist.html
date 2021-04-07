@@ -1,5 +1,5 @@
 <div>
-  <p class="task-counter-all">Ugabuga</p>
+  <p class="task-counter-all">No tasks have been completed yet!</p>
 </div>
 <div id="tasklist" hidden>
     {{#days}}
@@ -19,7 +19,7 @@
             <button class="material-icons done-all-btn" data-day="{{name}}">done_all</button>
           </span>
         </h2>
-        <span class="task-counter" data-day="{{name}}">
+        <span class="task-counter w3-left" data-day="{{name}}">
           <p>No tasks yet!</p>
         </span>
         <span class="tasks">
@@ -223,7 +223,7 @@ TaskList.load();
       width: calc(100vw - 20px);
     }
   }
-}
+}d
 
 .task-counter-all {
   margin: 0;
