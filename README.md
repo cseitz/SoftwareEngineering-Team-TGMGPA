@@ -1,6 +1,4 @@
 
-# Burndown Chart
-<img src="https://cseitz.dev/tgmgpa/burndown-chart/current.png">
 
 # swift
 Education SWIFT web app
