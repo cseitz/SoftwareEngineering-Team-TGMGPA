@@ -1,5 +1,5 @@
 <div class="w3-container w3-black banner" style="margin: 10px; border-radius: 0.5em;">
-  <span class="w3-xxxlarge w3-margin"><b>Taskbook</b>
+  <span class="w3-xxxlarge w3-margin" hidden><b>Taskbook</b>
     <span class="weather-container">
      <span class="temp"></span>
      <img class="icon">
@@ -9,10 +9,14 @@
      <span class= "country"></span>-->
     </span>
   </span>
+  <a class="w3-large w3-button w3-margin w3-round-large w3-black" href="/tasks">Taskbook</a>
+  <a class="w3-large w3-button w3-margin w3-round-large w3-black" href="/about">About</a>
+  <a class="w3-large w3-button w3-margin w3-round-large w3-black" href="/settings">Settings</a>
+  <a class="w3-large w3-button w3-margin w3-round-large w3-black" href="/login">Login</a>
   <button id="theme-toggle" class="material-icons dark-mode-switch" onclick="darkmode.toggle()">dark_mode</button>
 </div>
-<div>
-    <span class="w3-right">
+<div hidden>
+    <span>
         <a class="w3-large w3-button w3-margin w3-round-large w3-black" href="/tasks">Taskbook</a>
         <a class="w3-large w3-button w3-margin w3-round-large w3-black" href="/about">About</a>
         <a class="w3-large w3-button w3-margin w3-round-large w3-black" href="/settings">Settings</a>

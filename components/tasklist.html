@@ -19,11 +19,16 @@
             <button class="material-icons done-all-btn" data-day="{{name}}">done_all</button>
             <div id="task-dlted" style="display: none;" class="task-deleted">Task Deleted</div>
             <div id="undo" style="display: none;" class="task-undo-delete">Undo</div>
-            
+
           </span>
         </h2>
         <span class="task-counter" data-day="{{name}}">
-          <p>No tasks yet!</p>
+          {{#counter.completed}}
+            <p>Completed {{counter.completed}} out of {{counter.total}}</p>
+          {{/counter.completed}}
+          {{^counter.completed}}
+            <p>No tasks completed</p>
+          {{/counter.completed}}
         </span>
         <span class="tasks">
           {{#tasks}}
@@ -65,11 +70,24 @@ var TaskList = {
       }
     })
 
+    // This is the stuff that makes the task counter work
+    // The way it works is we get on the database, the values that have "today" or "tomorrow" in the day column
+    /*for (let task_counter of $('.task-counter')) {
+      API.tasks.count(task_counter.dataset.day.toLowerCase()).then( res => {
+        task_counter.firstElementChild.innerText = `Completed ${res.count.completed} out of ${res.count.todo}`
+      })
+    }*/
+
     console.log("tasks", state.tasks);
 
     let daysHTML = days.map(name => {
+      let counter = {
+        completed: 0,
+        total: 0,
+      };
       return {
         name,
+        counter,
         tasks: [],
       }
     })
@@ -83,6 +101,8 @@ var TaskList = {
     }
 
     for (let x of daysHTML) {
+      x.counter.completed = x.tasks.filter(o => o.completed).length;
+      x.counter.total = x.tasks.length;
       x.tasks.sort((a, b) => Number(b.id) - Number(a.id))
       x.tasks = x.tasks.map(o => o.render())
     }
@@ -90,19 +110,14 @@ var TaskList = {
     console.log(daysHTML)
     element.innerHTML = Mustache.render(template, {
       days: daysHTML,
+
     })
 
     for (let x of state.tasks) {
       x.hook($('#task-' + x.id))
     }
 
-    // This is the stuff that makes the task counter work
-    // The way it works is we get on the database, the values that have "today" or "tomorrow" in the day column
-    for (let task_counter of $('.task-counter')) {
-      API.tasks.count(task_counter.dataset.day.toLowerCase()).then( res => {
-        task_counter.innerText = `Completed ${res.count.completed} out of ${res.count.todo}`
-      })
-    }
+
 
     let week_completed_tasks = TaskList.completed(7)
     let task_counter_element = $('.task-counter-all')[0]
