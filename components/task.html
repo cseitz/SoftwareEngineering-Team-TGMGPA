@@ -15,7 +15,9 @@
         <i class="material-icons task-btn-done" title="{{ done_title }}">{{ icon.done }}</i>
       </span>
     </div>
+	
     <div class = "description-padding">{{{ html_description }}}</div>
+	<div class = "date-due"> {{ due_date }} </div>
   </div>
 </div>
 
@@ -130,7 +132,7 @@ class Task {
 			html_description: marked(this.data.description || ''),
 			swap_text: this.day === 'today' ? 'Move to Tomorrow' : 'Move to Today',
 			done_title: this.completed ? 'Not Done' : 'Done',
-			//date_: this.date_,
+			due_date: this.data.date.length > 0 ? moment(this.data.date).calendar() : '',
 		});
 	}
 	hook($el) {
@@ -336,6 +338,12 @@ class Task {
     .description-padding {
         padding-left: 50px;
     }
+
+	.date-due {
+		font-size: 12px;
+		padding-top: 10px;
+		text-align: right;
+	}
 
     //background-color: red;
     &:hover {
