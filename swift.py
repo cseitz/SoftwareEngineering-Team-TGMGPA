@@ -95,6 +95,16 @@ def tasks():
     return compile_sass_tag(template('tasks.tpl'))
 
 
+@route('/about')
+def about():
+    return compile_sass_tag(template('about.tpl'))
+
+
+@route('/settings')
+def settings():
+    return compile_sass_tag(template('settings.tpl'))
+
+
 @route('/login')
 def login():
     return compile_sass_tag(template("login.tpl"))
