@@ -86,6 +86,15 @@ var API = {
     },
     delete(task) {
       Archives.create(task);
+      //This is where you code the button to appear
+      setTimeout(function() {
+        $("#undo").show();
+        $("#task-dlted").show();
+      }, 1);
+      setTimeout(function() {
+        $("#undo").hide();
+        $("#task-dlted").hide();
+      }, 10000);
       if (API.offline) {
         return local.tasks.delete(task);
       }
