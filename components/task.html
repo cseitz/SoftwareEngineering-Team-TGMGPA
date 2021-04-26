@@ -15,7 +15,7 @@
         <i class="material-icons task-btn-done" title="{{ done_title }}">{{ icon.done }}</i>
       </span>
     </div>
-    <div>{{{ html_description }}}</div>
+    <div class = "description-padding">{{{ html_description }}}</div>
   </div>
 </div>
 
@@ -42,297 +42,316 @@
 </div>
 
 <script>
-  function contrasting_color(el) {
-    /*
-     * The following is used to calculate whether the letters should be in white or black, it follows the W3C guidelines
-     * See: https://www.w3.org/TR/WCAG20/
-     * See also: https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
-     */
-    let color = getComputedStyle(el).backgroundColor;
-    let colors = color.substr(4)
-    colors = colors.substr(0, colors.length - 1).split(',').map(o => Number(o.trim()) / 255).slice(0, 3)
-    const c = colors.map((col) => {
-      if (col <= 0.03928) {
-        return col / 12.92;
-      }
-      return Math.pow((col + 0.055) / 1.055, 2.4);
-    });
-    return (0.2126 * c[0]) + (0.7152 * c[1]) + (0.0722 * c[2]) > 0.179 ? 'black' : 'white';
-  }
+function contrasting_color(el) {
+	/*
+	 * The following is used to calculate whether the letters should be in white or black, it follows the W3C guidelines
+	 * See: https://www.w3.org/TR/WCAG20/
+	 * See also: https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
+	 */
+	let color = getComputedStyle(el).backgroundColor;
+	let colors = color.substr(4)
+	colors = colors.substr(0, colors.length - 1).split(',').map(o => Number(o.trim()) / 255).slice(0, 3)
+	const c = colors.map((col) => {
+		if (col <= 0.03928) {
+			return col / 12.92;
+		}
+		return Math.pow((col + 0.055) / 1.055, 2.4);
+	});
+	return (0.2126 * c[0]) + (0.7152 * c[1]) + (0.0722 * c[2]) > 0.179 ? 'black' : 'white';
+}
 
-  let indexes = 0;
-  let Tasks = {};
+let indexes = 0;
+let Tasks = {};
 
-  let setters = {
-    date: o => moment(o).format(),
-  }
+let setters = {
+	date: o => moment(o).format(),
+}
 
-  let getters = {
-    date: o => o.length >= 3 ? o : false,
-  }
+let getters = {
+	date: o => o.length >= 3 ? o : false,
+}
 
-  class Task {
-    constructor(cfg = {}) {
-      this.data = Object.assign({
-        id: false,
-        day: 'today',
-        name: '',
-        description: '',
-        //subtasks: [],
-        completed: false,
-        color: '#ffffff',
-        date: '' // Should be in the 'YYYY-MM-DDTHH:mm:ssZ' format (moment provides this format by default)
-      }, cfg);
-      /*if (this.data.id == false) {
-        this.data.id = ++indexes;
-      }*/
-      for (let key of Object.keys(this.data)) {
-        Object.defineProperty(this, key, {
-          get() {
-            if (key in getters) {
-              return getters[key](this.data[key])
-            }
-            return this.data[key];
-          },
-          set(value) {
-            if (key in setters) {
-              this.data[key] = setters[key](value);
-            } else {
-              this.data[key] = value;
-            }
-            if (this.data.id !== false) {
-              TaskList.update(this);
-            }
-          }
-        })
-      }
-      let task = this;
-      this.modal = new Modal(function(modal) {
-        return task.render_modal(modal);
-      });
-      this.modal.hook_show = function(el) {
-        task.modal_shown(el);
-      };
-      this.modal.hook_hide = function(evt) {
-        task.modal_hidden(evt);
-      };
-      if (!this.id) {
-        this.modal_close_text = "Create";
-        this.modal.show()
-      } else {
-        this.modal_close_text = "Save";
-        Tasks[this.data.id] = this;
-      }
-    }
-    render(html) {
-      let {
-        modal_close_text
-      } = this;
-      return Mustache.render(html || document.querySelector('#task-template').innerHTML, {
-        ...this.data,
-        modal_close_text,
-        classes: this.classes,
-        icon: this.icons,
-        html_description: marked(this.data.description || ''),
-        swap_text: this.day === 'today' ? 'Move to Tomorrow' : 'Move to Today',
-        done_title: this.completed ? 'Not Done' : 'Done',
-        //date_: this.date_,
-      });
-    }
-    hook($el) {
-      let task = this;
-      $el.on('click', function({
-        target
-      }) {
-        let {
-          classList
-        } = target;
-        if (classList.contains('task-btn-swap')) {
-          task.swap()
-        } else if (classList.contains('task-btn-color-label') || classList.contains('task-btn-color')) {
-          $el[0].querySelector('input[type="color"]').click();
-        } else if (classList.contains('task-btn-edit')) {
-          task.modal.show();
-        } else if (classList.contains('task-btn-delete')) {
-          TaskList.delete(task);
-        } else if ((classList.contains('task-btn-done')) || (target.tagName !== 'A' && target.tagName !== 'INPUT')) {
-          console.log(target)
-          task.completed = !task.completed;
-        }
-      })
-      let color_label;
-      if ($el && $el[0]) {
-        color_label = $el[0].querySelector('.task-btn-color-label');
-        color_label.firstElementChild.style.color = contrasting_color(color_label);
-      }
-      $el.find('input[type="color"]').on('change', function({
-        target
-      }) {
-        task.color = target.value;
-      }).on('input', function({
-        target
-      }) {
-        color_label.style.backgroundColor = target.value;
-        color_label.firstElementChild.style.color = contrasting_color(color_label);
-      })
-      let icons = task.icons;
-      let hoverIcon = function(name) {
-        let normal = icons[name];
-        let hover = icons[name + '_hover'];
-        $el.find(`.task-btn-${name}`).hover(function() {
-          this.innerHTML = hover;
-        }, function() {
-          this.innerHTML = normal
-        })
-      }
-      hoverIcon('edit');
-      hoverIcon('swap');
-      hoverIcon('delete');
-      //$el.find('.task-btn-color')
-    }
-    get classes() {
-      let classes = {
-        'task-completed': this.completed,
-      };
-      return Object.entries(classes).filter(o => o[1]).map(o => o[0]).join(' ');
-    }
-    get icons() {
-      return {
-        swap: 'arrow_' + (this.day === 'today' ? 'forward' : 'back'),
-        swap_hover: (this.day === 'today' ? 'east' : 'west'),
-        edit: 'edit',
-        edit_hover: 'drive_file_rename_outline',
-        delete: 'delete',
-        delete_hover: 'delete_forever',
-        color: 'format_color_fill',
-        done: this.completed ? 'clear' : 'done',
-      }
-    }
-    swap() {
-      if (this.day === 'today') {
-        this.date = moment(this.date,).add(1, 'd');
-        this.day = 'tomorrow';
+class Task {
+	constructor(cfg = {}) {
+		this.data = Object.assign({
+			id: false,
+			day: 'today',
+			name: '',
+			description: '',
+			//subtasks: [],
+			completed: false,
+			color: '#ffffff',
+			date: '' // Should be in the 'YYYY-MM-DDTHH:mm:ssZ' format (moment provides this format by default)
+		}, cfg);
+		/*if (this.data.id == false) {
+		  this.data.id = ++indexes;
+		}*/
+		for (let key of Object.keys(this.data)) {
+			Object.defineProperty(this, key, {
+				get() {
+					if (key in getters) {
+						return getters[key](this.data[key])
+					}
+					return this.data[key];
+				},
+				set(value) {
+					if (key in setters) {
+						this.data[key] = setters[key](value);
+					} else {
+						this.data[key] = value;
+					}
+					if (this.data.id !== false) {
+						TaskList.update(this);
+					}
+				}
+			})
+		}
+		let task = this;
+		this.modal = new Modal(function(modal) {
+			return task.render_modal(modal);
+		});
+		this.modal.hook_show = function(el) {
+			task.modal_shown(el);
+		};
+		this.modal.hook_hide = function(evt) {
+			task.modal_hidden(evt);
+		};
+		if (!this.id) {
+			this.modal_close_text = "Create";
+			this.modal.show()
+		} else {
+			this.modal_close_text = "Save";
+			Tasks[this.data.id] = this;
+		}
+	}
+	render(html) {
+		let {
+			modal_close_text
+		} = this;
+		return Mustache.render(html || document.querySelector('#task-template').innerHTML, {
+			...this.data,
+			modal_close_text,
+			classes: this.classes,
+			icon: this.icons,
+			html_description: marked(this.data.description || ''),
+			swap_text: this.day === 'today' ? 'Move to Tomorrow' : 'Move to Today',
+			done_title: this.completed ? 'Not Done' : 'Done',
+			//date_: this.date_,
+		});
+	}
+	hook($el) {
+		let task = this;
+		$el.on('click', function({
+			target
+		}) {
+			let {
+				classList
+			} = target;
+			if (classList.contains('task-btn-swap')) {
+				task.swap()
+			} else if (classList.contains('task-btn-color-label') || classList.contains('task-btn-color')) {
+				$el[0].querySelector('input[type="color"]').click();
+			} else if (classList.contains('task-btn-edit')) {
+				task.modal.show();
+			} else if (classList.contains('task-btn-delete')) {
+				TaskList.delete(task);
+			} else if ((classList.contains('task-btn-done')) || (target.tagName !== 'A' && target.tagName !== 'INPUT')) {
+				console.log(target)
+				task.completed = !task.completed;
+			}
+		})
+		let color_label;
+		if ($el && $el[0]) {
+			color_label = $el[0].querySelector('.task-btn-color-label');
+			color_label.firstElementChild.style.color = contrasting_color(color_label);
+		}
+		$el.find('input[type="color"]').on('change', function({
+			target
+		}) {
+			task.color = target.value;
+		}).on('input', function({
+			target
+		}) {
+			color_label.style.backgroundColor = target.value;
+			color_label.firstElementChild.style.color = contrasting_color(color_label);
+		})
+		let icons = task.icons;
+		let hoverIcon = function(name) {
+			let normal = icons[name];
+			let hover = icons[name + '_hover'];
+			$el.find(`.task-btn-${name}`).hover(function() {
+				this.innerHTML = hover;
+			}, function() {
+				this.innerHTML = normal
+			})
+		}
+		hoverIcon('edit');
+		hoverIcon('swap');
+		hoverIcon('delete');
+		//$el.find('.task-btn-color')
+	}
+	get classes() {
+		let classes = {
+			'task-completed': this.completed,
+		};
+		return Object.entries(classes).filter(o => o[1]).map(o => o[0]).join(' ');
+	}
+	get icons() {
+		return {
+			swap: 'arrow_' + (this.day === 'today' ? 'forward' : 'back'),
+			swap_hover: (this.day === 'today' ? 'east' : 'west'),
+			edit: 'edit',
+			edit_hover: 'drive_file_rename_outline',
+			delete: 'delete',
+			delete_hover: 'delete_forever',
+			color: 'format_color_fill',
+			done: this.completed ? 'remove_done' : 'done',
+		}
+	}
+	swap() {
+		if (this.day === 'today') {
+			this.date = moment(this.date, ).add(1, 'd');
+			this.day = 'tomorrow';
 
-      } else {
-        this.date = moment(this.date).subtract(1, 'd');
-        this.day = 'today';
-      }
-    }
-    modal_shown($modal) {
-      let task = this;
-      $modal.find('.task-edit-name').on('change', function({
-        target
-      }) {
-        task.name = target.value;
-      })
+		} else {
+			this.date = moment(this.date).subtract(1, 'd');
+			this.day = 'today';
+		}
+	}
+	modal_shown($modal) {
+		let task = this;
+		$modal.find('.task-edit-name').on('change', function({
+			target
+		}) {
+			task.name = target.value;
+		})
 
-      $modal.find('.task-edit-description').on('change', function({
-        target
-      }) {
-        task.description = target.value;
-      })
+		$modal.find('.task-edit-description').on('change', function({
+			target
+		}) {
+			task.description = target.value;
+		})
 
-      $modal.find('.task-edit-date').on('change', function({
-        target
-      }) {
-        task.date = target.value;
-      }).each(function() {
-        if (task.date) {
-          this.value = moment(task.date).format("YYYY-MM-DDTHH:mm"); // This allows the html field to render the correct date
-        }
-      })
-    }
-    modal_hidden(evt) {
-      if (!this.id) {
-        if (evt && evt.target.tagName === 'BUTTON') {
-          TaskList.create(this);
-        }
-      }
-    }
-    render_modal(modal) {
-      return this.render(document.querySelector('#task-edit-modal-template').innerHTML);
-    }
+		$modal.find('.task-edit-date').on('change', function({
+			target
+		}) {
+			task.date = target.value;
+		}).each(function() {
+			if (task.date) {
+				this.value = moment(task.date).format("YYYY-MM-DDTHH:mm"); // This allows the html field to render the correct date
+			}
+		})
+	}
+	modal_hidden(evt) {
+		if (!this.id) {
+			if (evt && evt.target.tagName === 'BUTTON') {
+				TaskList.create(this);
+			}
+		}
+	}
+	render_modal(modal) {
+		return this.render(document.querySelector('#task-edit-modal-template').innerHTML);
+	}
 
-  }
+}
 </script>
 
 <style lang="scss">
-  .task-item {
+.task-item {
     margin-bottom: 5px;
 
+    i {
+        -webkit-touch-callout: none;
+        /* iOS Safari */
+        -webkit-user-select: none;
+        /* Safari */
+        -khtml-user-select: none;
+        /* Konqueror HTML */
+        -moz-user-select: none;
+        /* Old versions of Firefox */
+        -ms-user-select: none;
+        /* Internet Explorer/Edge */
+        user-select: none;
+        /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+    }
+
     &.task-completed .task-content {
-      text-decoration: line-through;
+        text-decoration: line-through;
     }
 
     .material-icons {
-      cursor: pointer;
-      display: inline-block;
+        cursor: pointer;
+        display: inline-block;
     }
 
     input[type="color"] {
-      border: none;
-      background: none;
-      width: 0px;
-      opacity: 0;
-      height: 0px;
-      padding: 0px;
-      float: left;
+        border: none;
+        background: none;
+        width: 0;
+        opacity: 0;
+        height: 0;
+        padding: 0;
+        float: left;
     }
 
     .task-btn-color-label {
-      border: 1px solid lightgrey;
-      width: 100px;
-      margin-right: 25px;
-      padding: 0px;
-      border-radius: 0.5em;
-      cursor: pointer;
+        border: 1px solid lightgrey;
+        width: 100px;
+        margin-right: 25px;
+        padding: 0;
+        border-radius: 0.5em;
+        cursor: pointer;
 
-      &:hover {
+        &:hover {
+            .task-btn-color {
+                opacity: 1;
+            }
+        }
+
         .task-btn-color {
-          opacity: 1;
-        }
-      }
+            transform: scale(0.75);
+            transition: opacity 0.15s;
+            opacity: 0;
+            color: white;
 
-      .task-btn-color {
-        transform: scale(0.75);
-        transition: opacity 0.15s;
-        opacity: 0;
-        color: white;
-
-        &.light {
-          color: black;
+            &.light {
+                color: black;
+            }
         }
-      }
     }
 
     .task-btn-swap {
-      padding-right: 20px;
+        padding-right: 20px;
     }
 
-    .task-btn-swap,
     .task-btn-delete,
     .task-btn-done,
-    .task-btn-edit {
-      transition: transform 0.15s;
-      transform: scale(0.85);
+    .task-btn-edit,
+    .task-btn-swap {
+        transition: transform 0.15s;
+        transform: scale(0.85);
 
-      &:hover {
-        transform: scale(1);
-      }
-      &.task-btn-done {
-        width: 30px;
-      }
+        &:hover {
+            transform: scale(1);
+        }
+        &.task-btn-done {
+            width: 30px;
+        }
+    }
+    .description-padding {
+        padding-left: 50px;
     }
 
     //background-color: red;
     &:hover {
-      //background-color: blue;
+        //background-color: blue;
     }
-  }
+}
 
-  #modal .task-edit-modal-content {
+#modal .task-edit-modal-content {
     input.task-edit-name {
-      width: 100%;
+        width: 100%;
     }
-  }
+}
 </style>

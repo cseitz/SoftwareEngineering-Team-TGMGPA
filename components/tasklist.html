@@ -1,3 +1,6 @@
+<div>
+  <p class="task-counter-all">No tasks have been completed yet!</p>
+</div>
 <div id="tasklist" hidden>
     {{#days}}
       <div class="day-list">
@@ -14,8 +17,14 @@
           <span style="width: 80% !important;" hidden></span>
           <span style="grid-area: right; text-align: right;">
             <button class="material-icons done-all-btn" data-day="{{name}}">done_all</button>
+            <div id="task-dlted" style="display: none;" class="task-deleted">Task Deleted</div>
+            <div id="undo" style="display: none;" class="task-undo-delete">Undo</div>
+            
           </span>
         </h2>
+        <span class="task-counter" data-day="{{name}}">
+          <p>No tasks yet!</p>
+        </span>
         <span class="tasks">
           {{#tasks}}
             <span>{{{ . }}}</span>
@@ -24,6 +33,7 @@
       </div>
     {{/days}}
 </div>
+
 
 <script>
 let days = ['Today', 'Tomorrow'];
@@ -86,6 +96,24 @@ var TaskList = {
       x.hook($('#task-' + x.id))
     }
 
+    // This is the stuff that makes the task counter work
+    // The way it works is we get on the database, the values that have "today" or "tomorrow" in the day column
+    for (let task_counter of $('.task-counter')) {
+      API.tasks.count(task_counter.dataset.day.toLowerCase()).then( res => {
+        task_counter.innerText = `Completed ${res.count.completed} out of ${res.count.todo}`
+      })
+    }
+
+    let week_completed_tasks = TaskList.completed(7)
+    let task_counter_element = $('.task-counter-all')[0]
+    if (week_completed_tasks === 0) {
+      task_counter_element.innerText = 'You don\'t have any completed tasks this week. What about doing the first thing in your today list?'
+    } else {
+      task_counter_element.innerText = `In the last week you have completed ${week_completed_tasks} task${week_completed_tasks > 1 ? 's': ''}! Congratulations`
+    }
+
+
+
     document.querySelector('#tasklist').removeAttribute('hidden');
 
     $('.create-btn').on('click', function({ target }) {
@@ -125,6 +153,10 @@ var TaskList = {
       }
     });
 
+    $('.task-undo-delete').on('click', function( {target }){
+      Archives.undoDelete();
+    });
+
   },
   update(task) {
     console.log('PUSHING CHANGE TO SERVER', task.data);
@@ -147,6 +179,9 @@ var TaskList = {
     API.tasks.delete(task);
     this.render();
   },
+  undoDelete() {
+    API.archive.undoDelete();
+  },
   load() {
     let { render } = this;
     API.tasks.get().then(({ tasks }) => {
@@ -155,6 +190,9 @@ var TaskList = {
       })
       render();
     })
+  },
+  completed(days = 7) {
+    return this.state.tasks.filter(o => o.completed).length + Archives.completed(days);
   }
 }
 
@@ -181,16 +219,42 @@ TaskList.load();
       transform: scale(1);
     }
   }
+
+  .task-undo-delete{
+    font-size: 0.9vw;
+    color: rgb(109, 167, 255);
+    position: absolute;
+    bottom: 2.4vw;
+    right: 46vw;
+    background: black;
+  }
+
+  .task-deleted{
+    font-size: 0.9vw;
+    color: white;
+    position: absolute;
+    bottom: 2vw;
+    left: 43vw;
+    padding: 0.4vw;
+    padding-right: 6vw;
+    background: black;
+  }
 }
+
 #tasklist {
   .day-list {
     display: inline-block;
     width: calc(50vw - 20px);
     float: left;
-    padding: 10px;
+    padding: 0 10px;
     @media only screen and (max-width: 600px) {
       width: calc(100vw - 20px);
     }
   }
+}d
+
+.task-counter-all {
+  margin: 0;
+  padding: 0 10px;
 }
 </style>

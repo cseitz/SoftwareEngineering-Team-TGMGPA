@@ -18,6 +18,8 @@ from bottle import static_file
 
 VERSION = 0.1
 
+email = "shared@example.com"
+
 # development server
 PYTHONANYWHERE = ("PYTHONANYWHERE_SITE" in os.environ)
 
@@ -93,6 +95,16 @@ def tasks():
     return compile_sass_tag(template('tasks.tpl'))
 
 
+@route('/about')
+def about():
+    return compile_sass_tag(template('about.tpl'))
+
+
+@route('/settings')
+def settings():
+    return compile_sass_tag(template('settings.tpl'))
+
+
 @route('/login')
 def login():
     return compile_sass_tag(template("login.tpl"))
@@ -125,8 +137,9 @@ def get_tasks():
     response.headers['Content-Type'] = 'application/json'
     response.headers['Cache-Control'] = 'no-cache'
     task_table = taskbook_db.get_table('task')
-    tasks = [dict(x) for x in task_table.find(order_by='time')]
-    task_table.find(email="shared@example.com", order_by="time")
+    tasks = [dict(x) for x in task_table.find(email=email, order_by='time')]
+    for x in tasks:
+        x.pop('email', None)
     return {"tasks": tasks}
 
 
@@ -153,9 +166,9 @@ def create_task():
             "name": data['name'].strip(),
             "description": data['description'].strip(),
             "day": data['day'],
-            "email": data['shared@example.com'].strip(),
+            "email": email.strip(),
             "completed": False,
-            "color": "#ffffff",
+            "color": data['color'], #"#ffffff",
             "date": data['date']
         })
     except Exception as e:
@@ -190,6 +203,7 @@ def update_task():
     except Exception as e:
         response.status = "400 Bad Request:" + str(e)
         return
+    data['email'] = email
     if 'day' in data:
         data['time'] = time.time()
     try:
@@ -214,7 +228,7 @@ def delete_task():
         return
     try:
         task_table = taskbook_db.get_table('task')
-        task_table.delete(id=data['id'])
+        task_table.delete(email=email, id=data['id'])
     except Exception as e:
         response.status = "409 Bad Request:" + str(e)
         return
@@ -223,6 +237,32 @@ def delete_task():
     return json.dumps({'success': True})
 
 
+@get('/api/count')
+def get_task_count():
+    statement = 'SELECT COUNT(day) todo, SUM(completed) completed FROM task'
+    res = list(taskbook_db.query(statement))[0]
+
+    return {
+            'count': {
+                'day': 'alltime',
+                'todo': res['todo'],
+                'completed': res['completed']
+            }
+        }
+
+
+@get('/api/count/<day>')
+def get_task_count(day):
+    statement = 'SELECT day, COUNT(day) todo, SUM(completed) completed FROM task WHERE day = \'{0}\' GROUP BY day'.format(day)
+    res = list(taskbook_db.query(statement))[0]
+
+    return {
+            'count': {
+                'day': res['day'],
+                'todo': res['todo'],
+                'completed': res['completed']
+            }
+        }
 
 # Serve static files
 # THIS ROUTE SHOULD BE THE LAST ONE, AS IT IS A WILDCARD
@@ -257,4 +297,4 @@ elif platform.node() == 'ubuntu-s-1vcpu-1gb-nyc3-01':
         run(host='localhost', port=6590, debug=True)
 else:
    if __name__ == "__main__":
-       run(host='localhost', port=8080, debug=True)
+       run(host='0.0.0.0', port=os.environ.get('PORT', 8080), debug=False)

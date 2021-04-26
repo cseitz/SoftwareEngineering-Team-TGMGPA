@@ -85,6 +85,16 @@ var API = {
       })
     },
     delete(task) {
+      Archives.create(task);
+      //This is where you code the button to appear
+      setTimeout(function() {
+        $("#undo").show();
+        $("#task-dlted").show();
+      }, 1);
+      setTimeout(function() {
+        $("#undo").hide();
+        $("#task-dlted").hide();
+      }, 10000);
       if (API.offline) {
         return local.tasks.delete(task);
       }
@@ -100,10 +110,31 @@ var API = {
       if (API.offline) {
         return local.tasks.get();
       }
+
       return fetch('/api/tasks').then(res => res.json());
+    },
+    count(day) {
+      // This is the method I use to call on the server to serve us with the number of tasks
+      // See the swift.py file for the calls
+
+      if (API.offline) {
+        // TODO add offline support
+      }
+      if (day !== 'today' && day !== 'tomorrow') {
+        return fetch('/api/count')
+          .then(res => res.json())
+
+      } else {
+        return fetch(`/api/count/${day}`)
+          .then(res => res.json())
+      }
     }
   },
   get task() { // alias
     return this.tasks;
+  },
+  archives: Archives,
+  get archive() {
+    return Archives;
   }
 }
