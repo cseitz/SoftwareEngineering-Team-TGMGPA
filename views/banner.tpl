@@ -1,5 +1,5 @@
 <div class="w3-container w3-black banner" style="margin: 10px; border-radius: 0.5em;">
-  <span class="w3-xxxlarge w3-margin" hidden><b>Taskbook</b>
+  <span class="">
     <span class="weather-container">
      <span class="temp"></span>
      <img class="icon">
