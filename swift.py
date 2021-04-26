@@ -184,7 +184,7 @@ def update_task():
     try:
         data = request.json
         for key in data.keys():
-            assert key in ["id", "name", "completed", "day", "color", "description", "subtasks", "time", "date"], f"Illegal key '{key}'"
+            assert key in ["id", "name", "completed", "day","email", "color", "description", "subtasks", "time"], f"Illegal key '{key}'"
         assert type(data['id']) is int, f"id '{id}' is not int"
         if "name" in request:
             assert type(data['name']) is str, "name is not a string."
@@ -193,6 +193,8 @@ def update_task():
             assert type(data['completed']) is bool, "Completed is not a bool."
         if "day" in request:
             assert data['day'] in ["today", "tomorrow"], "day must be 'today' or 'tomorrow'"
+        if "email" in request:
+                assert data['email'] in ['shared@example.com'], "email must be provided"
         if "color" in request:
             assert len(data['color']) == 7, "The color must be in the format #XXXXXX"
             assert data['color'][0] == '#', "The color must be in the format #XXXXXX"
