@@ -108,21 +108,47 @@ def login():
 def about():
     return compile_sass_tag(template("about.tpl"))
 
+
 # ---------------------------
-# task REST api
+# database
 # ---------------------------
 
 import json
 import dataset
 import time
+import bcrypt
 
 taskbook_db = dataset.connect('sqlite:///taskbook.db')
-
 
 @get('/api/version')
 def get_version():
     return {"version": VERSION}
 
+# ---------------------------
+# account REST api
+# ---------------------------
+
+@post('/api/signup')
+def create_account():
+    return "ok"
+
+@post('/api/login')
+def login_account():
+    return "ok"
+
+@post('/api/logout')
+def logout_account():
+    return "ok"
+
+@get('/api/session')
+def get_account():
+    return "ok"
+
+
+
+# ---------------------------
+# task REST api
+# ---------------------------
 
 @get('/api/tasks')
 def get_tasks():
