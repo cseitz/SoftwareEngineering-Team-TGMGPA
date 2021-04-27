@@ -6,14 +6,14 @@ let template_api_data = {
 
 let local = {
   get $data() {
-    let data = localStorage.getItem('api_data');
+    let data = sessionStorage.getItem('api_data');
     if (!data) {
       data = JSON.stringify(template_api_data);
     }
     return JSON.parse(data);
   },
   set $data(value) {
-    localStorage.setItem('api_data', JSON.stringify(value))
+    sessionStorage.setItem('api_data', JSON.stringify(value))
   },
   tasks: {
     async create(taskdata) {
@@ -57,7 +57,8 @@ var API = {
     // if we are logged in, return false
     // otherwise, return true
     // can test by adding ?offline to the url. example: localhost:8080/?offline
-    return new URLSearchParams(location.search).get('offline') !== null;
+    //return new URLSearchParams(location.search).get('offline') !== null;
+    return true;
   },
   tasks: {
     create(data) {
