@@ -169,6 +169,10 @@ def logout_account():
         return redirect('/login')
     return redirect('/login')
 
+@get('/logout')
+def logout_account2():
+    return logout_account();
+
 @post('/api/signup')
 def create_account():
     name = request.forms.get('name')
