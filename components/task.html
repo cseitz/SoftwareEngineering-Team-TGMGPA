@@ -25,14 +25,14 @@
   <!-- TODO left this without any kind of styling. Needs to be made prettier -->
 
   <span class="task-edit-modal-content">
-    <label for="modal-task-edit-name" class="modal-label">Task:</label>
-    <input id="modal-task-edit-name" class="task-edit-name" value="{{name}}">
+    <input id="modal-task-edit-name" class="task-edit-name" placeholder="Task" value="{{name}}">
 
-    <label for="modal-task-edit-description" class="modal-label">Description:</label>
-    <input id="modal-task-edit-description" class="task-edit-description" value="{{description}}">
+    <input id="modal-task-edit-description" class="task-edit-description" placeholder="Description" value="{{description}}">
 
+    <br><br>
     <label for="modal-task-edit-date" class="modal-label">Due date:</label>
     <input type="datetime-local" id="modal-task-edit-date" class="task-edit-date">
+    <br><br>
     <button class="close-modal">{{ modal_close_text }}</button>
   </span>
 </div>
