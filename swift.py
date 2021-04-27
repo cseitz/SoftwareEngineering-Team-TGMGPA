@@ -152,7 +152,7 @@ def login_account():
     if user:
         if bcrypt.checkpw(str.encode(password), user["password"]):
             token = bytes(os.urandom(20)).hex()
-            response.set_cookie('taskbook_session', token)
+            response.set_cookie('taskbook_session', token, path='/')
             data = dict(email=user["email"], session=token)
             account_table.update(data, ['email'])
             return redirect('/')
@@ -165,7 +165,7 @@ def logout_account():
         account_table = taskbook_db.get_table('account')
         data = dict(email=user["email"], session="")
         account_table.update(data, ['email'])
-        response.set_cookie('taskbook_session', '', expires=0)
+        response.set_cookie('taskbook_session', '', expires=0, path='/')
         return redirect('/login')
     return redirect('/login')
 

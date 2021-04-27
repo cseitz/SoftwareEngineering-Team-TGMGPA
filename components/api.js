@@ -52,13 +52,24 @@ let local = {
   }
 }
 
+Object.defineProperty(window, 'cookies', {
+  get() {
+    return Object.fromEntries(decodeURIComponent(document.cookie).split(';').map(o => {
+      let equal = o.indexOf('=');
+      return [o.substr(0, equal), o.substr(equal + 1)]
+    }));
+  }
+})
+
 var API = {
   get offline() {
     // if we are logged in, return false
     // otherwise, return true
     // can test by adding ?offline to the url. example: localhost:8080/?offline
     //return new URLSearchParams(location.search).get('offline') !== null;
-    return true;
+    //return true;
+    console.log(window.cookies);
+    return !('taskbook_session' in window.cookies);
   },
   tasks: {
     create(data) {
