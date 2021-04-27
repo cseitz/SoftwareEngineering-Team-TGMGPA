@@ -174,10 +174,15 @@ def create_account():
     name = request.forms.get('name')
     email = request.forms.get('email')
     password = request.forms.get('password')
-    if length(email) <= 3 or length(password) <= 6:
+    if length(email) <= 3 or length(password) <= 6 or length(name) <= 1:
         return redirect('/signup')
-    
-    return "ok"
+    account_table = taskbook_db.get_table('account')
+    user = account_table.find_one(email=email)
+    if not user:
+        data = dict(email=email, name=name, password=bcrypt.hashpw(str.encode(password), bcrypt.gensalt()), session='')
+        account_table.insert(data)
+        return login_account()
+    return redirect('/signup')
 
 @get('/api/session2')
 def get_account2():
