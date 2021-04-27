@@ -68,8 +68,16 @@ var API = {
     // can test by adding ?offline to the url. example: localhost:8080/?offline
     //return new URLSearchParams(location.search).get('offline') !== null;
     //return true;
-    console.log(window.cookies);
-    return !('taskbook_session' in window.cookies);
+    let offline = !('taskbook_session' in window.cookies);
+    let btn = document.querySelector('#login-route');
+    if (offline) {
+      btn.href = '/login';
+      btn.innerHTML = 'Login';
+    } else {
+      btn.href = '/logout';
+      btn.innerHTML = 'Logout';
+    }
+    return offline;
   },
   tasks: {
     create(data) {
