@@ -6,6 +6,7 @@
         <span class="task-content" style="cursor: pointer">{{ name }}</span>
       </div>
       <span style="float: right">
+        <span class = "date-due"> {{ due_date }} </span>
         <button class="task-btn-color-label" style="background-color: {{color}}" title="Change Color">
           <i class="material-icons task-btn-color" title="Change Color">{{ icon.color }}</i>
           <input class="task-btn-color-picker" type="color" value={{color}}>
@@ -15,9 +16,8 @@
         <i class="material-icons task-btn-done" title="{{ done_title }}">{{ icon.done }}</i>
       </span>
     </div>
+    <div class = "description-padding" style="max-width: 80%">{{{ html_description }}}</div>
 
-    <div class = "description-padding">{{{ html_description }}}</div>
-	<div class = "date-due"> {{ due_date }} </div>
   </div>
 </div>
 
@@ -340,8 +340,10 @@ class Task {
     }
 
 	.date-due {
-		font-size: 12px;
-		padding-top: 10px;
+		//font-size: 12px;
+		padding-top: 0.25em;
+    padding-right: 10px;
+    float: left;
 		text-align: right;
 	}
 
