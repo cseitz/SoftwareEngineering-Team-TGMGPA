@@ -52,13 +52,32 @@ let local = {
   }
 }
 
+Object.defineProperty(window, 'cookies', {
+  get() {
+    return Object.fromEntries(decodeURIComponent(document.cookie).split(';').map(o => {
+      let equal = o.indexOf('=');
+      return [o.substr(0, equal), o.substr(equal + 1)]
+    }));
+  }
+})
+
 var API = {
   get offline() {
     // if we are logged in, return false
     // otherwise, return true
     // can test by adding ?offline to the url. example: localhost:8080/?offline
     //return new URLSearchParams(location.search).get('offline') !== null;
-    return true;
+    //return true;
+    let offline = !('taskbook_session' in window.cookies);
+    let btn = document.querySelector('#login-route');
+    if (offline) {
+      btn.href = '/login';
+      btn.innerHTML = 'Login';
+    } else {
+      btn.href = '/logout';
+      btn.innerHTML = 'Logout';
+    }
+    return offline;
   },
   tasks: {
     create(data) {

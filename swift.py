@@ -8,7 +8,7 @@ import os
 from bottle import request, response
 
 # HTML request types
-from bottle import route, get, put, post, delete
+from bottle import route, get, put, post, delete, redirect
 
 # web page template processor
 from bottle import template
@@ -18,7 +18,7 @@ from bottle import static_file
 
 VERSION = 0.1
 
-email = "shared@example.com"
+#email = "shared@example.com"
 
 # development server
 PYTHONANYWHERE = ("PYTHONANYWHERE_SITE" in os.environ)
@@ -108,29 +108,108 @@ def login():
 def about():
     return compile_sass_tag(template("about.tpl"))
 
+
 # ---------------------------
-# task REST api
+# database
 # ---------------------------
 
 import json
 import dataset
 import time
+import bcrypt
 
 taskbook_db = dataset.connect('sqlite:///taskbook.db')
-
 
 @get('/api/version')
 def get_version():
     return {"version": VERSION}
 
+# ---------------------------
+# account REST api
+# ---------------------------
+
+@get('/api/session')
+def get_account():
+    session = request.get_cookie('taskbook_session')
+    if session:
+        if len(session) == 40:
+            account_table = taskbook_db.get_table('account')
+            user = account_table.find_one(session=session)
+            if user:
+                user.pop('password')
+                return user
+    return False
+    #return bytes(os.urandom(20)).hex()
+
+@post('/api/login')
+def login_account():
+    email = request.forms.get('email')
+    password = request.forms.get('password')
+    if len(email) <= 3 or len(password) <= 3:
+        return redirect('/login')
+    account_table = taskbook_db.get_table('account')
+    user = account_table.find_one(email=email)
+    if user:
+        if bcrypt.checkpw(str.encode(password), user["password"]):
+            token = bytes(os.urandom(20)).hex()
+            response.set_cookie('taskbook_session', token, path='/')
+            data = dict(email=user["email"], session=token)
+            account_table.update(data, ['email'])
+            return redirect('/')
+    return redirect('/login')
+
+@get('/api/logout')
+def logout_account():
+    user = get_account()
+    if user:
+        account_table = taskbook_db.get_table('account')
+        data = dict(email=user["email"], session="")
+        account_table.update(data, ['email'])
+        response.set_cookie('taskbook_session', '', expires=0, path='/')
+        return redirect('/login')
+    return redirect('/login')
+
+@get('/logout')
+def logout_account2():
+    return logout_account();
+
+@post('/api/signup')
+def create_account():
+    name = request.forms.get('name')
+    email = request.forms.get('email')
+    password = request.forms.get('password')
+    if len(email) <= 3 or len(password) <= 3 or len(name) <= 1:
+        return redirect('/register')
+    account_table = taskbook_db.get_table('account')
+    user = account_table.find_one(email=email)
+    if not user:
+        data = dict(email=email, name=name, password=bcrypt.hashpw(str.encode(password), bcrypt.gensalt()), session='')
+        account_table.insert(data)
+        return login_account()
+    return redirect('/register')
+
+@get('/api/session2')
+def get_account2():
+    what = get_account()
+    print(what)
+    return what
+
+
+
+# ---------------------------
+# task REST api
+# ---------------------------
 
 @get('/api/tasks')
 def get_tasks():
     """return a list of tasks sorted by submit/modify time"""
+    user = get_account()
+    if not user:
+        return False
     response.headers['Content-Type'] = 'application/json'
     response.headers['Cache-Control'] = 'no-cache'
     task_table = taskbook_db.get_table('task')
-    tasks = [dict(x) for x in task_table.find(email=email, order_by='time')]
+    tasks = [dict(x) for x in task_table.find(email=user["email"], order_by='time')]
     for x in tasks:
         x.pop('email', None)
     return {"tasks": tasks}
@@ -139,6 +218,9 @@ def get_tasks():
 @post('/api/tasks')
 def create_task():
     """create a new task in the database"""
+    user = get_account()
+    if not user:
+        return False
     try:
         data = request.json
         for key in data.keys():
@@ -159,7 +241,7 @@ def create_task():
             "name": data['name'].strip(),
             "description": data['description'].strip(),
             "day": data['day'],
-            "email": email.strip(),
+            "email": user["email"],
             "completed": False,
             "color": data['color'], #"#ffffff",
             "date": data['date']
@@ -174,6 +256,9 @@ def create_task():
 @put('/api/tasks')
 def update_task():
     """update properties of an existing task in the database"""
+    user = get_account()
+    if not user:
+        return False
     try:
         data = request.json
         for key in data.keys():
@@ -194,7 +279,7 @@ def update_task():
     except Exception as e:
         response.status = "400 Bad Request:" + str(e)
         return
-    data['email'] = email
+    data['email'] = user["email"]
     if 'day' in data:
         data['time'] = time.time()
     try:
@@ -211,6 +296,9 @@ def update_task():
 @delete('/api/tasks')
 def delete_task():
     """delete an existing task in the database"""
+    user = get_account()
+    if not user:
+        return False
     try:
         data = request.json
         assert type(data['id']) is int, f"id '{id}' is not int"
@@ -219,7 +307,7 @@ def delete_task():
         return
     try:
         task_table = taskbook_db.get_table('task')
-        task_table.delete(email=email, id=data['id'])
+        task_table.delete(email=user["email"], id=data['id'])
     except Exception as e:
         response.status = "409 Bad Request:" + str(e)
         return
