@@ -5,4 +5,5 @@
   <input type="password" name="password" placeholder="Password"><br>
   <input type="submit" value="Login">
 </form>
+<a href="/register">Need to create an account?</a>
 % include("footer.tpl")

@@ -6,4 +6,5 @@
   <input type="password" name="password" placeholder="Password"><br>
   <input type="submit" value="Sign Up">
 </form>
+<a href="/login">Already have an account?</a>
 % include("footer.tpl")
