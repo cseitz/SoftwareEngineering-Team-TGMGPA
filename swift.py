@@ -18,7 +18,7 @@ from bottle import static_file
 
 VERSION = 0.1
 
-email = "shared@example.com"
+#email = "shared@example.com"
 
 # development server
 PYTHONANYWHERE = ("PYTHONANYWHERE_SITE" in os.environ)
@@ -203,10 +203,13 @@ def get_account2():
 @get('/api/tasks')
 def get_tasks():
     """return a list of tasks sorted by submit/modify time"""
+    user = get_account()
+    if not user:
+        return False
     response.headers['Content-Type'] = 'application/json'
     response.headers['Cache-Control'] = 'no-cache'
     task_table = taskbook_db.get_table('task')
-    tasks = [dict(x) for x in task_table.find(email=email, order_by='time')]
+    tasks = [dict(x) for x in task_table.find(email=user["email"], order_by='time')]
     for x in tasks:
         x.pop('email', None)
     return {"tasks": tasks}
@@ -215,6 +218,9 @@ def get_tasks():
 @post('/api/tasks')
 def create_task():
     """create a new task in the database"""
+    user = get_account()
+    if not user:
+        return False
     try:
         data = request.json
         for key in data.keys():
@@ -235,7 +241,7 @@ def create_task():
             "name": data['name'].strip(),
             "description": data['description'].strip(),
             "day": data['day'],
-            "email": email.strip(),
+            "email": user["email"],
             "completed": False,
             "color": data['color'], #"#ffffff",
             "date": data['date']
@@ -250,6 +256,9 @@ def create_task():
 @put('/api/tasks')
 def update_task():
     """update properties of an existing task in the database"""
+    user = get_account()
+    if not user:
+        return False
     try:
         data = request.json
         for key in data.keys():
@@ -270,7 +279,7 @@ def update_task():
     except Exception as e:
         response.status = "400 Bad Request:" + str(e)
         return
-    data['email'] = email
+    data['email'] = user["email"]
     if 'day' in data:
         data['time'] = time.time()
     try:
@@ -287,6 +296,9 @@ def update_task():
 @delete('/api/tasks')
 def delete_task():
     """delete an existing task in the database"""
+    user = get_account()
+    if not user:
+        return False
     try:
         data = request.json
         assert type(data['id']) is int, f"id '{id}' is not int"
@@ -295,7 +307,7 @@ def delete_task():
         return
     try:
         task_table = taskbook_db.get_table('task')
-        task_table.delete(email=email, id=data['id'])
+        task_table.delete(email=user["email"], id=data['id'])
     except Exception as e:
         response.status = "409 Bad Request:" + str(e)
         return
