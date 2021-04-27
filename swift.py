@@ -8,7 +8,7 @@ import os
 from bottle import request, response
 
 # HTML request types
-from bottle import route, get, put, post, delete
+from bottle import route, get, put, post, delete, redirect
 
 # web page template processor
 from bottle import template
@@ -145,12 +145,16 @@ def get_account():
 def login_account():
     return "ok"
 
-@post('/api/logout')
+@get('/api/logout')
 def logout_account():
     user = get_account()
     if user:
-
-    return "ok"
+        account_table = taskbook_db.get_table('account')
+        data = dict(email=user["email"], session="")
+        account_table.update(data, ['email'])
+        response.set_cookie('taskbook_session', '', expires=0)
+        return redirect('/login')
+    return redirect('/login')
 
 @post('/api/signup')
 def create_account():
