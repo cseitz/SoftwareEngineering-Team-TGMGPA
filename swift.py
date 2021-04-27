@@ -136,7 +136,7 @@ def get_account():
             account_table = taskbook_db.get_table('account')
             user = account_table.find_one(session=session)
             if user:
-                user.pop('Password')
+                user.pop('password')
                 return user
     return False
     #return bytes(os.urandom(20)).hex()
