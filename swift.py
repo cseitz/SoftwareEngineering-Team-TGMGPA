@@ -143,7 +143,20 @@ def get_account():
 
 @post('/api/login')
 def login_account():
-    return "ok"
+    email = request.forms.get('email')
+    password = request.forms.get('password')
+    if length(email) <= 3 or length(password) <= 6:
+        return redirect('/login')
+    account_table = taskbook_db.get_table('account')
+    user = account_table.find_one(email=email)
+    if user:
+        if bcrypt.checkpw(str.encode(password), user["password"]):
+            token = bytes(os.urandom(20)).hex()
+            response.set_cookie('taskbook_session', token)
+            data = dict(email=user["email"], session=token)
+            account_table.update(data, ['email'])
+            return redirect('/')
+    return redirect('/login')
 
 @get('/api/logout')
 def logout_account():
@@ -158,6 +171,12 @@ def logout_account():
 
 @post('/api/signup')
 def create_account():
+    name = request.forms.get('name')
+    email = request.forms.get('email')
+    password = request.forms.get('password')
+    if length(email) <= 3 or length(password) <= 6:
+        return redirect('/signup')
+    
     return "ok"
 
 @get('/api/session2')
