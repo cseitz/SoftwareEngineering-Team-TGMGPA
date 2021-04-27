@@ -128,9 +128,18 @@ def get_version():
 # account REST api
 # ---------------------------
 
-@post('/api/signup')
-def create_account():
-    return "ok"
+@get('/api/session')
+def get_account():
+    session = request.get_cookie('taskbook_session')
+    if session:
+        if length(session) == 40:
+            account_table = taskbook_db.get_table('account')
+            user = account_table.find_one(session=session)
+            if user:
+                user.pop('Password')
+                return user
+    return False
+    #return bytes(os.urandom(20)).hex()
 
 @post('/api/login')
 def login_account():
@@ -138,11 +147,20 @@ def login_account():
 
 @post('/api/logout')
 def logout_account():
+    user = get_account()
+    if user:
+
     return "ok"
 
-@get('/api/session')
-def get_account():
-    return bytes(os.urandom(20)).hex()
+@post('/api/signup')
+def create_account():
+    return "ok"
+
+@get('/api/session2')
+def get_account2():
+    what = get_account()
+    print(what)
+    return what
 
 
 
