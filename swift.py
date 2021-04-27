@@ -142,7 +142,7 @@ def create_task():
     try:
         data = request.json
         for key in data.keys():
-            assert key in ["name", "day", "description", "color", "completed", "date"], f"Illegal key '{key}'"
+            assert key in ["name", "day", "description", "color", "completed", "date", "time"], f"Illegal key '{key}'"
         assert type(data['name']) is str, "name is not a string."
         assert len(data['name'].strip()) > 0, "name is length zero."
         assert data['day'] in ["today", "tomorrow"], "day must be 'today' or 'tomorrow'"
