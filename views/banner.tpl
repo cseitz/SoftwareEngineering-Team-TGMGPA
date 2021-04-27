@@ -12,16 +12,8 @@
   <a class="w3-large w3-button w3-margin w3-round-large w3-black" href="/tasks">Taskbook</a>
   <a class="w3-large w3-button w3-margin w3-round-large w3-black" href="/about">About</a>
   <a class="w3-large w3-button w3-margin w3-round-large w3-black" href="/settings">Settings</a>
-  <a class="w3-large w3-button w3-margin w3-round-large w3-black" href="/login">Login</a>
+  <a class="w3-large w3-button w3-margin w3-round-large w3-black" href="/login" hidden>Login</a>
   <button id="theme-toggle" class="material-icons dark-mode-switch" onclick="darkmode.toggle()">dark_mode</button>
-</div>
-<div hidden>
-    <span>
-        <a class="w3-large w3-button w3-margin w3-round-large w3-black" href="/tasks">Taskbook</a>
-        <a class="w3-large w3-button w3-margin w3-round-large w3-black" href="/about">About</a>
-        <a class="w3-large w3-button w3-margin w3-round-large w3-black" href="/settings">Settings</a>
-        <a class="w3-large w3-button w3-margin w3-round-large w3-black" href="/login" hidden>Login</a>
-  </span>
 </div>
 
 <style>
