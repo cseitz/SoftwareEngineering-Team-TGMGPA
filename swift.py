@@ -95,16 +95,6 @@ def tasks():
     return compile_sass_tag(template('tasks.tpl'))
 
 
-@route('/about')
-def about():
-    return compile_sass_tag(template('about.tpl'))
-
-
-@route('/settings')
-def settings():
-    return compile_sass_tag(template('settings.tpl'))
-
-
 @route('/login')
 def login():
     return compile_sass_tag(template("login.tpl"))
@@ -114,6 +104,9 @@ def login():
 def login():
     return compile_sass_tag(template("register.tpl"))
 
+@route('/about')
+def about():
+    return compile_sass_tag(template("about.tpl"))
 
 # ---------------------------
 # task REST api
@@ -184,7 +177,7 @@ def update_task():
     try:
         data = request.json
         for key in data.keys():
-            assert key in ["id", "name", "completed", "day","email", "color", "description", "subtasks", "time"], f"Illegal key '{key}'"
+            assert key in ["id", "name", "completed", "day", "color", "description", "subtasks", "time", "date"], f"Illegal key '{key}'"
         assert type(data['id']) is int, f"id '{id}' is not int"
         if "name" in request:
             assert type(data['name']) is str, "name is not a string."
@@ -193,8 +186,6 @@ def update_task():
             assert type(data['completed']) is bool, "Completed is not a bool."
         if "day" in request:
             assert data['day'] in ["today", "tomorrow"], "day must be 'today' or 'tomorrow'"
-        if "email" in request:
-                assert data['email'] in ['shared@example.com'], "email must be provided"
         if "color" in request:
             assert len(data['color']) == 7, "The color must be in the format #XXXXXX"
             assert data['color'][0] == '#', "The color must be in the format #XXXXXX"
@@ -237,32 +228,6 @@ def delete_task():
     return json.dumps({'success': True})
 
 
-@get('/api/count')
-def get_task_count():
-    statement = 'SELECT COUNT(day) todo, SUM(completed) completed FROM task'
-    res = list(taskbook_db.query(statement))[0]
-
-    return {
-            'count': {
-                'day': 'alltime',
-                'todo': res['todo'],
-                'completed': res['completed']
-            }
-        }
-
-
-@get('/api/count/<day>')
-def get_task_count(day):
-    statement = 'SELECT day, COUNT(day) todo, SUM(completed) completed FROM task WHERE day = \'{0}\' GROUP BY day'.format(day)
-    res = list(taskbook_db.query(statement))[0]
-
-    return {
-            'count': {
-                'day': res['day'],
-                'todo': res['todo'],
-                'completed': res['completed']
-            }
-        }
 
 # Serve static files
 # THIS ROUTE SHOULD BE THE LAST ONE, AS IT IS A WILDCARD
