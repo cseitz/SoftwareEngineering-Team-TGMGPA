@@ -22,7 +22,7 @@ if __name__ == "__main__":
     #password = bcrypt.hashpw(b"test", bcrypt.gensalt())
     password = bcrypt.hashpw(str.encode("test"), bcrypt.gensalt())
     account_table.insert_many([
-        {"email":"shared@example.com", "name": "John Doe", "password": password}
+        {"email":"shared@example.com", "name": "John Doe", "password": password, "session": ""}
     ])
     user = account_table.find_one(email='shared@example.com')
     print(user)

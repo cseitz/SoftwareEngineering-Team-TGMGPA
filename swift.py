@@ -142,7 +142,7 @@ def logout_account():
 
 @get('/api/session')
 def get_account():
-    return "ok"
+    return bytes(os.urandom(20)).hex()
 
 
 
