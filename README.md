@@ -9,7 +9,7 @@ Version 0.1 Date: Jan 19, 2021
 
 # installing
 ```
-pip3 install libsass dataset bottle
+pip3 install libsass dataset bottle bcrypt
 ```
 
 ```
