@@ -30,10 +30,10 @@
     <input id="modal-task-edit-description" class="task-edit-description" placeholder="Description" value="{{description}}">
 
     <br><br>
-    <label for="modal-task-edit-date" class="modal-label">Due date:</label>
+    <label hidden for="modal-task-edit-date" class="modal-label">Due date:</label>
     <input type="datetime-local" id="modal-task-edit-date" class="task-edit-date">
     <br><br>
-    <button class="close-modal">{{ modal_close_text }}</button>
+    <button class="close-modal task-modal-close">{{ modal_close_text }}</button>
   </span>
 </div>
 
@@ -124,6 +124,10 @@ class Task {
 		let {
 			modal_close_text
 		} = this;
+    let date_ = this.data.date.length > 0 ? moment(this.data.date).calendar() : '';
+    if (date_ == 'Invalid date') {
+      date_ = '';
+    }
 		return Mustache.render(html || document.querySelector('#task-template').innerHTML, {
 			...this.data,
 			modal_close_text,
@@ -132,7 +136,7 @@ class Task {
 			html_description: marked(this.data.description || ''),
 			swap_text: this.day === 'today' ? 'Move to Tomorrow' : 'Move to Today',
 			done_title: this.completed ? 'Not Done' : 'Done',
-			due_date: this.data.date.length > 0 ? moment(this.data.date).calendar() : '',
+			due_date: date_,
 		});
 	}
 	hook($el) {
@@ -361,4 +365,43 @@ class Task {
         width: 100%;
     }
 }
+
+body.dark-mode .task-modal-close {
+  background-color: rgba(0, 0, 0, 0.5)!important;
+}
+body.dark-mode {
+  .task-edit-name, .task-edit-description, .task-edit-date {
+    background-color: rgba(0, 0, 0, 0.15)!important;
+  }
+
+}
+body:not(.dark-mode) {
+  .task-edit-name, .task-edit-description, .task-edit-date {
+    background-color: rgba(0, 0, 0, 0.05)!important;
+  }
+  .task-modal-close:hover {
+    filter: brightness(90%)!important;
+  }
+}
+.task-modal-close {
+  width: 100%;
+  cursor: pointer;
+  transition: filter 0.05s, transform 0.05s;
+  &:hover {
+    filter: brightness(120%);
+    transform: scale(1.025);
+  }
+}
+.task-edit-description {
+  margin-top: 10px;
+}
+.task-edit-description, .task-edit-date {
+  width: 100%;
+}
+.task-modal-close, .task-edit-name, .task-edit-description, .task-edit-date {
+  border-radius: 0.5em;
+  border: none;
+  padding: 10px;
+}
+
 </style>
