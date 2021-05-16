@@ -4,6 +4,10 @@
 
 As part of Kent State University's CS 33901, our group developed a piece of software throughout the semester using the [Scrum Process](https://www.scrum.org/resources/what-is-scrum).
 
+Our [Final Presentation Writeup](https://github.com/cseitz/SoftwareEngineering-Team-TGMGPA/issues/132) contains all the features we implemented over the course of the semester, with written details.
+
+### > [Final Presentation Writeup](https://github.com/cseitz/SoftwareEngineering-Team-TGMGPA/issues/132) <
+
 Our Team's Sprints can be found on our [Project Board](https://github.com/cseitz/SoftwareEngineering-Team-TGMGPA/projects?query=is%3Aclosed).
 
 While this project was deployed for a final presentation, this project is no longer being hosted due to the cost of hosting resources.
