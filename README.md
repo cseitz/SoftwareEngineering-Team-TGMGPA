@@ -13,22 +13,22 @@ As part of Kent State University's CS 33901, our group developed a piece of soft
 - [Chris Seitz](https://github.com/cseitz)
 
 ### Marketing / Research / Documentation
-- Noah Baker
-- Song Li
+- [Noah Baker](https://github.com/nbaker24)
+- [Song Li](https://github.com/sli55)
 
 ### Software Developer
-- Alvacir Wesley
-- Justin Clark
-- Cieara Pfiefer
-- Josh Keegan
-- Ronnie Silvey
+- [Alvacir Wesley](https://github.com/wesaka)
+- [Justin Clark](https://github.com/justintclark)
+- [Cieara Pfiefer](https://github.com/cpfeifer)
+- [Josh Keegan](https://github.com/jkeegan1)
+- [Ronnie Silvey](https://github.com/rsilvey1)
 
 ### Test Engineer
-- Joel Lee
-- Jeremy Reese
+- [Joel Lee](https://github.com/Chulz25)
+- [Jeremy Reese](https://github.com/JReese1212)
 
 ### Operations Engineer
-- Damani Wade
+- [Damani Wade](https://github.com/damaniwade)
 
 
 
