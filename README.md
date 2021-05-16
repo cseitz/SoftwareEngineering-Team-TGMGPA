@@ -9,6 +9,10 @@ As part of Kent State University's CS 33901, our group developed a piece of soft
 ### President
 - [Nolan Spencer](https://github.com/NolSpencer)
 
+The President was the owner of the project. Their role consisted of being the main line of communication between Dr. Delozier and our team, ensured we all submitted out assignments on time, and assisted the Marketing team in documentation and research. 
+
+Additionally, due to the fairly non-time-consuming nature of this role in our situation, Nolan Spencer also worked part-time as a Software Developer when he did not have any immediate Presidential duties.
+
 ### Scrum Master
 - [Chris Seitz](https://github.com/cseitz)
 
