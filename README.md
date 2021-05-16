@@ -1,12 +1,42 @@
 # Software Engineering Project
 
+## Information
+
 As part of Kent State University's CS 33901, our group developed a piece of software throughout the semester using the [Scrum Process](https://www.scrum.org/resources/what-is-scrum).
 
+## Team Roles
+
+### President
+- [Nolan Spencer](https://github.com/NolSpencer)
+
+### Scrum Master
+- [Chris Seitz](https://github.com/cseitz)
+
+### Marketing / Research / Documentation
+- Noah Baker
+- Song Li
+
+### Software Developer
+- Alvacir Wesley
+- Justin Clark
+- Cieara Pfiefer
+- Josh Keegan
+- Ronnie Silvey
+
+### Test Engineer
+- Joel Lee
+- Jeremy Reese
+
+### Operations Engineer
+- Damani Wade
 
 
-## Project Info
 
-# swift
+
+
+# Usage
+
+## swift
 Education SWIFT web app
 
 Original Author: Gregory S. DeLozier, Ph.D.
